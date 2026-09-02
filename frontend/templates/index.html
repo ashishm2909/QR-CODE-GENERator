@@ -293,6 +293,8 @@
 </div>
 
 <script>
+    document.documentElement.classList.add('js-ready');
+
     document.addEventListener('DOMContentLoaded', () => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

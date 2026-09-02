@@ -681,14 +681,20 @@ header {
 }
 
 .fade-in-scroll {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: 0.6s ease;
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .fade-in-scroll.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Keep scroll reveals progressive: content remains available if JS is delayed. */
+html.js-ready .fade-in-scroll:not(.visible) {
+    opacity: 0;
+    transform: translateY(30px);
 }
 
 @keyframes fadeUp {
