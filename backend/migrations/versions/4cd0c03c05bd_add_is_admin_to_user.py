@@ -19,8 +19,11 @@ depends_on = None
 def upgrade():
     bind = op.get_bind()
     inspector = sa.inspect(bind)
-    columns = [col['name'] for col in inspector.get_columns('users')]
 
+    if not inspector.has_table('users'):
+        return
+
+    columns = [col['name'] for col in inspector.get_columns('users')]
     if 'is_admin' not in columns:
         with op.batch_alter_table('users', schema=None) as batch_op:
             batch_op.add_column(sa.Column('is_admin', sa.Boolean(), nullable=True))
@@ -29,8 +32,11 @@ def upgrade():
 def downgrade():
     bind = op.get_bind()
     inspector = sa.inspect(bind)
-    columns = [col['name'] for col in inspector.get_columns('users')]
 
+    if not inspector.has_table('users'):
+        return
+
+    columns = [col['name'] for col in inspector.get_columns('users')]
     if 'is_admin' in columns:
         with op.batch_alter_table('users', schema=None) as batch_op:
             batch_op.drop_column('is_admin')
