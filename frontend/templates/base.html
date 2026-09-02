@@ -7,7 +7,7 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
     <title>{% block title %}QR Code Generator{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4">
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.418.0/dist/umd/lucide.min.js" defer></script>
+    <script src="{{ url_for('static', filename='js/lucide.min.js') }}" defer></script>
     <script>
         // Standardized on dark theme
         document.documentElement.setAttribute('data-theme', 'dark');
@@ -121,7 +121,9 @@
             `;
 
             container.appendChild(toast);
-            lucide.createIcons({ root: toast });
+            if (window.lucide) {
+                window.lucide.createIcons({ root: toast });
+            }
 
             // Trigger animation
             requestAnimationFrame(() => {
@@ -169,7 +171,9 @@
             }
 
             // Initialize icons
-            lucide.createIcons();
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
         });
     </script>
 </body>
