@@ -1,0 +1,438 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>{{ current_user.email.split('@')[0]|capitalize }}'s Dashboard</h1>
+        <p>Manage and download your generated QR codes.</p>
+    </div>
+
+    <div class="qr-stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Total Generations</span>
+            <span class="stat-value">{{ qrs|length }}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Plan Type</span>
+            <span class="stat-value" style="color: var(--accent-primary);">{{ current_user.plan|upper }}</span>
+        </div>
+    </div>
+
+    <!-- Analytics Chart -->
+    <div class="analytics-card fade-in-up">
+        <div class="analytics-header">
+            <h3>Scan Analytics (Last 7 Days)</h3>
+            <span class="badge-growth">+14% vs last week</span>
+        </div>
+        <div class="chart-container">
+            <canvas id="scansChart"></canvas>
+        </div>
+    </div>
+
+    {% if qrs %}
+    <div class="qr-history-grid">
+        {% for qr in qrs %}
+        <div class="qr-card-premium" id="qr-{{ qr.id }}">
+            <div class="qr-card-preview">
+                {% if qr.is_artistic %}
+                    <img src="/api/qr-svg/{{ qr.id }}" alt="Artistic QR Code">
+                {% else %}
+                    <img src="{{ qr.svg_content }}" alt="QR Code">
+                {% endif %}
+            </div>
+            <div class="qr-card-info">
+                <h3>{{ qr.type|capitalize }} QR</h3>
+                <p class="qr-data-preview">{{ qr.data|truncate(30) }}</p>
+                <div class="qr-meta">
+                    <span><i data-lucide="calendar" size="14"></i> {{ qr.created_at.strftime('%Y-%m-%d') }}</span>
+                    {% if qr.is_artistic %}
+                        <span class="badge-artistic">Artistic</span>
+                    {% endif %}
+                </div>
+                <div class="qr-actions">
+                    <button class="btn-icon delete-qr" data-id="{{ qr.id }}" title="Delete">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                    <button class="btn-icon download-qr" data-id="{{ qr.id }}" data-artistic="{{ 'true' if qr.is_artistic else 'false' }}" data-content="{{ qr.svg_content if not qr.is_artistic else '' }}" data-name="{{ qr.type }}-qr" title="Download">
+                        <i data-lucide="download"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon"><i data-lucide="qr-code"></i></div>
+        <h2>No QR codes yet</h2>
+        <p>Start generating to see your history here!</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Generate Now</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.dashboard-container {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.dashboard-header {
+    margin-bottom: 40px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 24px;
+}
+.dashboard-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent-primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.dashboard-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+.qr-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+.stat-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.stat-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+.qr-history-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+@media (max-width: 1024px) {
+    .qr-history-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 600px) {
+    .qr-history-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.qr-card-premium {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 20px;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.qr-card-premium:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: var(--accent-primary);
+    box-shadow: 0 15px 40px rgba(168, 85, 247, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+}
+.qr-card-preview {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 16px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+.qr-card-premium:hover .qr-card-preview {
+    transform: scale(1.03);
+}
+.qr-card-preview img, .qr-card-preview .svg-container svg {
+    max-height: 100%;
+    max-width: 100%;
+    height: auto;
+    width: auto;
+}
+.qr-card-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.qr-card-info h3 {
+    margin-bottom: 6px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+.qr-data-preview {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    word-break: break-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.qr-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.badge-artistic {
+    background: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+.qr-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+.btn-icon {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    flex: 1;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-icon i {
+    width: 20px;
+    height: 20px;
+}
+.btn-icon:hover {
+    background: var(--accent-primary);
+    color: #000;
+    border-color: var(--accent-primary);
+}
+.btn-icon.delete-qr:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+.empty-state {
+    text-align: center;
+    padding: 100px 20px;
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: var(--radius-lg);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.empty-icon {
+    font-size: 4rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    opacity: 0.2;
+}
+.empty-state h2 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+}
+.empty-state p {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+.analytics-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    margin-bottom: 48px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.analytics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.analytics-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.badge-growth {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.chart-container {
+    height: 300px;
+    width: 100%;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Delete QR functionality
+    document.querySelectorAll('.delete-qr').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if(!confirm('Are you sure you want to delete this QR code?')) return;
+            
+            const qrId = btn.getAttribute('data-id');
+            try {
+                const response = await fetch(`/api/delete_qr/${qrId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                if(data.success) {
+                    document.getElementById(`qr-${qrId}`).remove();
+                    showToast('QR code deleted from your dashboard', 'success');
+                } else {
+                    showToast('Error: ' + data.error, 'error');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    });
+
+    // Download QR functionality
+    document.querySelectorAll('.download-qr').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const qrId = btn.getAttribute('data-id');
+            const isArtistic = btn.getAttribute('data-artistic') === 'true';
+            const content = btn.getAttribute('data-content');
+            const name = btn.getAttribute('data-name');
+            
+            let downloadContent = content;
+            let extension = 'png';
+            
+            if (isArtistic) {
+                try {
+                    const resp = await fetch(`/api/qr-svg/${qrId}`);
+                    downloadContent = await resp.text();
+                    extension = 'svg';
+                } catch(e) {
+                    showToast('Failed to download SVG', 'error');
+                    return;
+                }
+            }
+            
+            const link = document.createElement('a');
+            if (extension === 'svg') {
+                link.href = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(downloadContent)));
+            } else {
+                link.href = downloadContent;
+            }
+            link.download = `${name}-${Date.now()}.${extension}`;
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    });
+});
+</script>
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('scansChart');
+    if (!ctx) return;
+
+    // Simulated data for the last 7 days
+    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Total Scans',
+            data: [65, 59, 80, 81, 56, 110, 140],
+            fill: true,
+            backgroundColor: 'rgba(255, 215, 0, 0.1)',
+            borderColor: '#FFD700',
+            borderWidth: 2,
+            tension: 0.4,
+            pointBackgroundColor: '#FFD700',
+            pointBorderColor: '#1a1a1a',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+        }]
+    };
+
+    new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 15, 15, 0.9)',
+                    titleColor: '#fff',
+                    bodyColor: '#a855f7',
+                    padding: 12,
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    displayColors: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: { color: 'rgba(255, 255, 255, 0.5)' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: 'rgba(255, 255, 255, 0.5)' }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

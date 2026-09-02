@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Processing Payment - QRNation{% endblock %}
+
+{% block content %}
+<div class="payment-page" style="text-align: center; padding: 80px 20px; max-width: 600px; margin: 0 auto;">
+    <div style="width: 80px; height: 80px; background: rgba(168, 85, 247, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+        <i data-lucide="loader-2" class="animate-spin" style="width: 40px; height: 40px; color: #a855f7;"></i>
+    </div>
+    <h1 style="font-size: 2rem; margin-bottom: 12px;">Processing Your Payment</h1>
+    <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 32px;">
+        Your payment is being processed. This page will update automatically.
+    </p>
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline" style="padding: 12px 28px;">
+        Go to Dashboard
+    </a>
+</div>
+
+<script>
+    // Auto-refresh to check if payment went through
+    setTimeout(() => location.reload(), 5000);
+</script>
+{% endblock %}

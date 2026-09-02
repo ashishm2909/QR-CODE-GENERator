@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Blog - QRNation{% endblock %}
+
+{% block content %}
+<section class="premium-section">
+    <div class="section-badge">Resources</div>
+    <h1 class="hero-title">The <span class="gradient-text">QRNation Blog</span></h1>
+    <p class="hero-subtitle">Insights, trends, and news from the world of QR and barcode technology.</p>
+
+    <div class="blog-list" style="max-width: 900px; margin: 60px auto;">
+        <div class="blog-card" style="background: var(--bg-secondary); border-radius: 16px; overflow: hidden; margin-bottom: 40px; display: grid; grid-template-columns: 300px 1fr;">
+            <div style="background: var(--bg-tertiary); height: 200px;"></div>
+            <div style="padding: 30px;">
+                <div style="color: var(--accent-primary); font-size: 0.8rem; font-weight: 600; margin-bottom: 10px;">MARKETING • 5 MIN READ</div>
+                <h3>The Future of Direct-to-Consumer Marketing via QR</h3>
+                <p style="color: var(--text-secondary); margin-top: 15px;">How brands are using artistic QR codes to build deeper connections with their customers.</p>
+                <div style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">March 20, 2026</div>
+            </div>
+        </div>
+
+        <div class="blog-card" style="background: var(--bg-secondary); border-radius: 16px; overflow: hidden; margin-bottom: 40px; display: grid; grid-template-columns: 300px 1fr;">
+            <div style="background: var(--bg-tertiary); height: 200px;"></div>
+            <div style="padding: 30px;">
+                <div style="color: var(--accent-primary); font-size: 0.8rem; font-weight: 600; margin-bottom: 10px;">TECHNOLOGY • 8 MIN READ</div>
+                <h3>Why SVG is the King of QR Formats</h3>
+                <p style="color: var(--text-secondary); margin-top: 15px;">Scaling your QR codes shouldn't mean losing quality. Learn why we prioritize vector graphics.</p>
+                <div style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">March 15, 2026</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

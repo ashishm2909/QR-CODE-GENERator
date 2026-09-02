@@ -1,0 +1,874 @@
+{% extends "base.html" %}
+
+{% block title %}Artistic QR Studio - QRNation{% endblock %}
+
+{% block content %}
+<section class="hero-premium hero-artistic-studio fade-in-up">
+    <h1>Artistic QR Studio</h1>
+    <p>Create stunning, AI-inspired artistic QR codes with custom shapes, colors, and halftones.</p>
+</section>
+
+<div class="generator-layout">
+    <div class="main-column">
+        <!-- Type Selector -->
+        <h3 style="color: var(--text-secondary); margin-bottom: 20px;">1. Choose Content Type</h3>
+        <div class="type-grid">
+            <div class="type-btn active" onclick="selectType('url')">
+                <i data-lucide="link"></i>
+                <span>URL</span>
+            </div>
+            <div class="type-btn" onclick="selectType('pdf')">
+                <i data-lucide="file-text"></i>
+                <span>PDF</span>
+            </div>
+            <div class="type-btn" onclick="selectType('image')">
+                <i data-lucide="image"></i>
+                <span>Image</span>
+            </div>
+            <div class="type-btn" onclick="selectType('app')">
+                <i data-lucide="layout-grid"></i>
+                <span>App Markets</span>
+            </div>
+            <div class="type-btn" onclick="selectType('text')">
+                <i data-lucide="type"></i>
+                <span>Text</span>
+            </div>
+            <div class="type-btn" onclick="selectType('maps')">
+                <i data-lucide="map-pin"></i>
+                <span>Maps</span>
+            </div>
+            <div class="type-btn" onclick="selectType('wifi')">
+                <i data-lucide="wifi"></i>
+                <span>WiFi</span>
+            </div>
+            <div class="type-btn" onclick="selectType('audio')">
+                <i data-lucide="music"></i>
+                <span>Audio</span>
+            </div>
+            <div class="type-btn" onclick="selectType('whatsapp')">
+                <i data-lucide="message-circle"></i>
+                <span>WhatsApp</span>
+            </div>
+            <div class="type-btn" onclick="selectType('youtube')">
+                <i data-lucide="youtube"></i>
+                <span>YouTube</span>
+            </div>
+            <div class="type-btn" onclick="selectType('instagram')">
+                <i data-lucide="instagram"></i>
+                <span>Instagram</span>
+            </div>
+            <div class="type-btn" onclick="selectType('facebook')">
+                <i data-lucide="facebook"></i>
+                <span>Facebook</span>
+            </div>
+            <div class="type-btn" onclick="selectType('telegram')">
+                <i data-lucide="send"></i>
+                <span>Telegram</span>
+            </div>
+            <div class="type-btn" onclick="selectType('mail')">
+                <i data-lucide="mail"></i>
+                <span>Email</span>
+            </div>
+            <div class="type-btn" onclick="selectType('tiktok')">
+                <i data-lucide="video"></i>
+                <span>TikTok</span>
+            </div>
+            <div class="type-btn" onclick="selectType('video')">
+                <i data-lucide="film"></i>
+                <span>Video File</span>
+            </div>
+            <div class="type-btn" onclick="selectType('pptx')">
+                <i data-lucide="presentation"></i>
+                <span>PPTX</span>
+            </div>
+            <div class="type-btn" onclick="selectType('vcard')">
+                <i data-lucide="contact"></i>
+                <span>vCard</span>
+            </div>
+            <div class="type-btn" onclick="selectType('phone')">
+                <i data-lucide="phone"></i>
+                <span>Phone</span>
+            </div>
+            <div class="type-btn" onclick="selectType('sms')">
+                <i data-lucide="message-square"></i>
+                <span>SMS</span>
+            </div>
+        </div>
+
+        <!-- Presets Section -->
+        <div class="customization-section" style="display: block; border: 2px solid rgba(168, 85, 247, 0.3); margin-bottom: 24px;">
+            <div class="section-header-small">
+                <h3>✨ Style Presets</h3>
+                <p>One-click artistic styles — pick a preset to auto-fill studio controls.</p>
+            </div>
+            <div class="presets-grid">
+                <!-- FREE PRESETS -->
+                <div class="preset-card" data-free="true" onclick="applyPreset('classic-dots')">
+                    <div class="preset-preview" style="background: #111;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <circle cx="20" cy="20" r="8" fill="#fff"/>
+                            <circle cx="40" cy="20" r="8" fill="#fff"/>
+                            <circle cx="60" cy="20" r="8" fill="#fff"/>
+                            <circle cx="20" cy="40" r="8" fill="#fff"/>
+                            <circle cx="40" cy="40" r="5" fill="#fff"/>
+                            <circle cx="60" cy="40" r="8" fill="#fff"/>
+                            <circle cx="20" cy="60" r="8" fill="#fff"/>
+                            <circle cx="40" cy="60" r="8" fill="#fff"/>
+                            <circle cx="60" cy="60" r="8" fill="#fff"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Classic Dots</span>
+                        <span class="preset-tag tag-free">FREE</span>
+                    </div>
+                    <small>Clean circles with bullseye finders</small>
+                </div>
+
+                <div class="preset-card" data-free="true" onclick="applyPreset('soft-grid')">
+                    <div class="preset-preview" style="background: #111;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <rect x="12" y="12" width="16" height="16" rx="5" fill="#ccc"/>
+                            <rect x="32" y="12" width="16" height="16" rx="5" fill="#ccc"/>
+                            <rect x="52" y="12" width="16" height="16" rx="5" fill="#ccc"/>
+                            <rect x="12" y="32" width="16" height="16" rx="5" fill="#ccc"/>
+                            <rect x="32" y="32" width="16" height="16" rx="3" fill="#ccc"/>
+                            <rect x="52" y="32" width="16" height="16" rx="5" fill="#ccc"/>
+                            <rect x="12" y="52" width="16" height="16" rx="5" fill="#ccc"/>
+                            <rect x="32" y="52" width="16" height="16" rx="5" fill="#ccc"/>
+                            <rect x="52" y="52" width="16" height="16" rx="5" fill="#ccc"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Soft Grid</span>
+                        <span class="preset-tag tag-free">FREE</span>
+                    </div>
+                    <small>Rounded squares, muted elegance</small>
+                </div>
+
+                <div class="preset-card" data-free="true" onclick="applyPreset('ocean-crystal')">
+                    <div class="preset-preview" style="background: #0a0a2e;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <polygon points="20,12 28,20 20,28 12,20" fill="#4fc3f7"/>
+                            <polygon points="40,12 48,20 40,28 32,20" fill="#4fc3f7"/>
+                            <polygon points="60,12 68,20 60,28 52,20" fill="#4fc3f7"/>
+                            <polygon points="20,32 28,40 20,48 12,40" fill="#4fc3f7"/>
+                            <polygon points="40,32 48,40 40,48 32,40" fill="#4fc3f7"/>
+                            <polygon points="60,32 68,40 60,48 52,40" fill="#4fc3f7"/>
+                            <polygon points="20,52 28,60 20,68 12,60" fill="#4fc3f7"/>
+                            <polygon points="40,52 48,60 40,68 32,60" fill="#4fc3f7"/>
+                            <polygon points="60,52 68,60 60,68 52,60" fill="#4fc3f7"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Ocean Crystal</span>
+                        <span class="preset-tag tag-free">FREE</span>
+                    </div>
+                    <small>Blue diamonds on deep sea</small>
+                </div>
+
+                <!-- PRO PRESETS -->
+                <div class="preset-card" data-free="false" onclick="applyPreset('neon-burst')">
+                    <div class="preset-preview" style="background: #0a0a0a;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <polygon points="20,10 23,17 30,17 24,22 26,30 20,25 14,30 16,22 10,17 17,17" fill="#39ff14"/>
+                            <polygon points="40,10 43,17 50,17 44,22 46,30 40,25 34,30 36,22 30,17 37,17" fill="#39ff14"/>
+                            <polygon points="60,10 63,17 70,17 64,22 66,30 60,25 54,30 56,22 50,17 57,17" fill="#39ff14"/>
+                            <polygon points="20,30 23,37 30,37 24,42 26,50 20,45 14,50 16,42 10,37 17,37" fill="#39ff14"/>
+                            <polygon points="40,30 43,37 50,37 44,42 46,50 40,45 34,50 36,42 30,37 37,37" fill="#39ff14"/>
+                            <polygon points="60,30 63,37 70,37 64,42 66,50 60,45 54,50 56,42 50,37 57,37" fill="#39ff14"/>
+                            <polygon points="20,50 23,57 30,57 24,62 26,70 20,65 14,70 16,62 10,57 17,57" fill="#39ff14"/>
+                            <polygon points="40,50 43,57 50,57 44,62 46,70 40,65 34,70 36,62 30,57 37,57" fill="#39ff14"/>
+                            <polygon points="60,50 63,57 70,57 64,62 66,70 60,65 54,70 56,62 50,57 57,57" fill="#39ff14"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Neon Burst</span>
+                        <span class="preset-tag tag-pro">PRO</span>
+                    </div>
+                    <small>Green stars with halftone glow</small>
+                </div>
+
+                <div class="preset-card" data-free="false" onclick="applyPreset('honeycomb')">
+                    <div class="preset-preview" style="background: #1a1205;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <polygon points="20,10 28,14 28,24 20,28 12,24 12,14" fill="#f59e0b"/>
+                            <polygon points="40,10 48,14 48,24 40,28 32,24 32,14" fill="#f59e0b"/>
+                            <polygon points="60,10 68,14 68,24 60,28 52,24 52,14" fill="#f59e0b"/>
+                            <polygon points="20,30 28,34 28,44 20,48 12,44 12,34" fill="#f59e0b"/>
+                            <polygon points="40,30 48,34 48,44 40,48 32,44 32,34" fill="#f59e0b"/>
+                            <polygon points="60,30 68,34 68,44 60,48 52,44 52,34" fill="#f59e0b"/>
+                            <polygon points="20,50 28,54 28,64 20,68 12,64 12,54" fill="#f59e0b"/>
+                            <polygon points="40,50 48,54 48,64 40,68 32,64 32,54" fill="#f59e0b"/>
+                            <polygon points="60,50 68,54 68,64 60,68 52,64 52,54" fill="#f59e0b"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Honeycomb</span>
+                        <span class="preset-tag tag-pro">PRO</span>
+                    </div>
+                    <small>Amber hexagons, warm halftone</small>
+                </div>
+
+                <div class="preset-card" data-free="false" onclick="applyPreset('liquid-gold')">
+                    <div class="preset-preview" style="background: #1a1200;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <circle cx="20" cy="20" r="9" fill="#ffd700" opacity="0.9"/>
+                            <circle cx="40" cy="20" r="7" fill="#ffd700" opacity="0.7"/>
+                            <circle cx="60" cy="20" r="9" fill="#ffd700" opacity="0.9"/>
+                            <circle cx="20" cy="40" r="7" fill="#ffd700" opacity="0.7"/>
+                            <circle cx="40" cy="40" r="5" fill="#ffd700" opacity="0.5"/>
+                            <circle cx="60" cy="40" r="7" fill="#ffd700" opacity="0.7"/>
+                            <circle cx="20" cy="60" r="9" fill="#ffd700" opacity="0.9"/>
+                            <circle cx="40" cy="60" r="7" fill="#ffd700" opacity="0.7"/>
+                            <circle cx="60" cy="60" r="9" fill="#ffd700" opacity="0.9"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Liquid Gold</span>
+                        <span class="preset-tag tag-pro">PRO</span>
+                    </div>
+                    <small>Gold circles with luminous halftone</small>
+                </div>
+
+                <div class="preset-card" data-free="false" onclick="applyPreset('midnight-glass')">
+                    <div class="preset-preview" style="background: #0d0015;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <rect x="11" y="11" width="18" height="18" rx="8" fill="#9333ea"/>
+                            <rect x="31" y="11" width="18" height="18" rx="8" fill="#9333ea"/>
+                            <rect x="51" y="11" width="18" height="18" rx="8" fill="#9333ea"/>
+                            <rect x="11" y="31" width="18" height="18" rx="8" fill="#9333ea"/>
+                            <rect x="31" y="31" width="18" height="18" rx="8" fill="#9333ea"/>
+                            <rect x="51" y="31" width="18" height="18" rx="8" fill="#9333ea"/>
+                            <rect x="11" y="51" width="18" height="18" rx="8" fill="#9333ea"/>
+                            <rect x="31" y="51" width="18" height="18" rx="8" fill="#9333ea"/>
+                            <rect x="51" y="51" width="18" height="18" rx="8" fill="#9333ea"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Midnight Glass</span>
+                        <span class="preset-tag tag-pro">PRO</span>
+                    </div>
+                    <small>Purple glass with rounded finders</small>
+                </div>
+
+                <div class="preset-card" data-free="false" onclick="applyPreset('geo-frost')">
+                    <div class="preset-preview" style="background: #0a1628;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <polygon points="20,10 30,20 20,30 10,20" fill="#67e8f9"/>
+                            <polygon points="40,10 50,20 40,30 30,20" fill="#67e8f9"/>
+                            <polygon points="60,10 70,20 60,30 50,20" fill="#67e8f9"/>
+                            <polygon points="20,30 30,40 20,50 10,40" fill="#67e8f9"/>
+                            <polygon points="40,30 50,40 40,50 30,40" fill="#67e8f9"/>
+                            <polygon points="60,30 70,40 60,50 50,40" fill="#67e8f9"/>
+                            <polygon points="20,50 30,60 20,70 10,60" fill="#67e8f9"/>
+                            <polygon points="40,50 50,60 40,70 30,60" fill="#67e8f9"/>
+                            <polygon points="60,50 70,60 60,70 50,60" fill="#67e8f9"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Geo Frost</span>
+                        <span class="preset-tag tag-pro">PRO</span>
+                    </div>
+                    <small>Cyan diamonds with diamond finders</small>
+                </div>
+
+                <div class="preset-card" data-free="false" onclick="applyPreset('rose-heart')">
+                    <div class="preset-preview" style="background: #1a0a0f;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <path d="M20,24 C16,18 10,18 10,24 C10,30 20,36 20,36 C20,36 30,30 30,24 C30,18 24,18 20,24Z" fill="#f43f5e"/>
+                            <path d="M40,24 C36,18 30,18 30,24 C30,30 40,36 40,36 C40,36 50,30 50,24 C50,18 44,18 40,24Z" fill="#f43f5e"/>
+                            <path d="M60,24 C56,18 50,18 50,24 C50,30 60,36 60,36 C60,36 70,30 70,24 C70,18 64,18 60,24Z" fill="#f43f5e"/>
+                            <path d="M20,44 C16,38 10,38 10,44 C10,50 20,56 20,56 C20,56 30,50 30,44 C30,38 24,38 20,44Z" fill="#f43f5e"/>
+                            <path d="M40,44 C36,38 30,38 30,44 C30,50 40,56 40,56 C40,56 50,50 50,44 C50,38 44,38 40,44Z" fill="#f43f5e"/>
+                            <path d="M60,44 C56,38 50,38 50,44 C50,50 60,56 60,56 C60,56 70,50 70,44 C70,38 64,38 60,44Z" fill="#f43f5e"/>
+                            <path d="M20,64 C16,58 10,58 10,64 C10,70 20,76 20,76 C20,76 30,70 30,64 C30,58 24,58 20,64Z" fill="#f43f5e"/>
+                            <path d="M40,64 C36,58 30,58 30,64 C30,70 40,76 40,76 C40,76 50,70 50,64 C50,58 44,58 40,64Z" fill="#f43f5e"/>
+                            <path d="M60,64 C56,58 50,58 50,64 C50,70 60,76 60,76 C60,76 70,70 70,64 C70,58 64,58 60,64Z" fill="#f43f5e"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Rose Heart</span>
+                        <span class="preset-tag tag-pro">PRO</span>
+                    </div>
+                    <small>Rose hearts with nested finders</small>
+                </div>
+
+                <div class="preset-card" data-free="false" onclick="applyPreset('teardrop-bloom')">
+                    <div class="preset-preview" style="background: #0a1a0a;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <ellipse cx="20" cy="18" rx="8" ry="12" fill="#22c55e" transform="rotate(180,20,18)"/>
+                            <ellipse cx="40" cy="18" rx="6" ry="10" fill="#22c55e" transform="rotate(180,40,18)"/>
+                            <ellipse cx="60" cy="18" rx="8" ry="12" fill="#22c55e" transform="rotate(180,60,18)"/>
+                            <ellipse cx="20" cy="38" rx="6" ry="10" fill="#22c55e" transform="rotate(180,20,38)"/>
+                            <ellipse cx="40" cy="38" rx="4" ry="8" fill="#22c55e" transform="rotate(180,40,38)"/>
+                            <ellipse cx="60" cy="38" rx="6" ry="10" fill="#22c55e" transform="rotate(180,60,38)"/>
+                            <ellipse cx="20" cy="58" rx="8" ry="12" fill="#22c55e" transform="rotate(180,20,58)"/>
+                            <ellipse cx="40" cy="58" rx="6" ry="10" fill="#22c55e" transform="rotate(180,40,58)"/>
+                            <ellipse cx="60" cy="58" rx="8" ry="12" fill="#22c55e" transform="rotate(180,60,58)"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Teardrop Bloom</span>
+                        <span class="preset-tag tag-pro">PRO</span>
+                    </div>
+                    <small>Teardrop petals with flower finders</small>
+                </div>
+
+                <div class="preset-card" data-free="false" onclick="applyPreset('obsidian-cross')">
+                    <div class="preset-preview" style="background: #0a0a0a;">
+                        <svg viewBox="0 0 80 80" width="80" height="80">
+                            <polygon points="20,10 24,10 24,16 30,16 30,20 24,20 24,26 20,26 20,20 14,20 14,16 20,16" fill="#ef4444"/>
+                            <polygon points="40,10 44,10 44,16 50,16 50,20 44,20 44,26 40,26 40,20 34,20 34,16 40,16" fill="#ef4444"/>
+                            <polygon points="60,10 64,10 64,16 70,16 70,20 64,20 64,26 60,26 60,20 54,20 54,16 60,16" fill="#ef4444"/>
+                            <polygon points="20,30 24,30 24,36 30,36 30,40 24,40 24,46 20,46 20,40 14,40 14,36 20,36" fill="#ef4444"/>
+                            <polygon points="40,30 44,30 44,36 50,36 50,40 44,40 44,46 40,46 40,40 34,40 34,36 40,36" fill="#ef4444"/>
+                            <polygon points="60,30 64,30 64,36 70,36 70,40 64,40 64,46 60,46 60,40 54,40 54,36 60,36" fill="#ef4444"/>
+                            <polygon points="20,50 24,50 24,56 30,56 30,60 24,60 24,66 20,66 20,60 14,60 14,56 20,56" fill="#ef4444"/>
+                            <polygon points="40,50 44,50 44,56 50,56 50,60 44,60 44,66 40,66 40,60 34,60 34,56 40,56" fill="#ef4444"/>
+                            <polygon points="60,50 64,50 64,56 70,56 70,60 64,60 64,66 60,66 60,60 54,60 54,56 60,56" fill="#ef4444"/>
+                        </svg>
+                    </div>
+                    <div class="preset-info">
+                        <span class="preset-name">Obsidian Cross</span>
+                        <span class="preset-tag tag-business">BUSINESS</span>
+                    </div>
+                    <small>Red crosses with target finders</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section" id="inputDetails" style="margin-bottom: 30px;">
+            <!-- Dynamic Content Loaded Here -->
+        </div>
+
+        <!-- Artistic Controls Section -->
+        <div class="customization-section" style="display: block; border: 2px solid var(--accent-primary);">
+            <div class="section-header-small">
+                <h3>🎨 Studio Controls <span class="badge-new">PRO</span></h3>
+                <p>Fine-tune your artistic design parameters below.</p>
+            </div>
+
+            <!-- Free plan upgrade banner (hidden for pro) -->
+            <div id="freePlanBanner" style="display:none; margin-top:12px; background: linear-gradient(135deg, rgba(168,85,247,0.12), rgba(236,72,153,0.08)); border: 1px solid rgba(168,85,247,0.3); border-radius: 12px; padding: 14px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i data-lucide="lock" style="color:#a855f7; width:18px; height:18px;"></i>
+                    <span style="font-size:0.9rem;"><strong>Free Plan</strong> — Some Studio features are locked. Upgrade for full access.</span>
+                </div>
+                <a href="{{ url_for('main.pricing') }}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem; background: linear-gradient(135deg, #a855f7, #ec4899); border:none;">⚡ Upgrade to Pro</a>
+            </div>
+
+            <div id="artisticControls" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top: 12px;">
+                <label>
+                    <small>Module Shape</small>
+                    <select id="shapeSelect" class="form-input">
+                        <option value="circle">Circle</option>
+                        <option value="rounded">Rounded Square</option>
+                        <option value="square">Square</option>
+                        <option value="diamond">Diamond</option>
+                        <option value="cross" data-pro="true">Cross (Pro)</option>
+                        <option value="triangle" data-pro="true">Triangle (Pro)</option>
+                        <option value="star" data-pro="true">Star (Pro)</option>
+                        <option value="hexagon" data-pro="true">Hexagon (Pro)</option>
+                        <option value="petal" data-pro="true">Petal (Pro)</option>
+                        <option value="heart" data-pro="true">Heart (Pro)</option>
+                        <option value="teardrop" data-pro="true">Teardrop (Pro)</option>
+                    </select>
+                </label>
+                <label>
+                    <small>Finder Style</small>
+                    <select id="finderSelect" class="form-input">
+                        <option value="bullseye">Bullseye</option>
+                        <option value="rounded">Rounded</option>
+                        <option value="classic">Classic</option>
+                        <option value="diamond" data-pro="true">Diamond (Pro)</option>
+                        <option value="target" data-pro="true">Target (Pro)</option>
+                        <option value="nested" data-pro="true">Nested Rings (Pro)</option>
+                        <option value="flower" data-pro="true">Flower (Pro)</option>
+                    </select>
+                </label>
+                <label>
+                    <small>Accent Color</small>
+                    <input id="colorInput" class="form-input" type="color" value="#a855f7" style="height: 42px; padding: 6px;">
+                </label>
+                <label id="qualityLabel">
+                    <small>Rendering Quality</small>
+                    <select id="qualitySelect" class="form-input">
+                        <option value="16">Standard (Free)</option>
+                        <option value="24" data-pro="true">🔒 High (Pro)</option>
+                        <option value="32" data-pro="true">🔒 Ultra (Pro)</option>
+                        <option value="40" data-pro="true">🔒 Max (Pro)</option>
+                        <option value="48" data-pro="true">🔒 Print (Business)</option>
+                    </select>
+                </label>
+                <div id="halftoneWrapper" style="display:flex; flex-direction: column; justify-content: center; gap: 8px;">
+                    <label style="display:flex; align-items:center; gap:8px;">
+                        <input type="checkbox" id="halftoneToggle" style="width: 18px; height: 18px;">
+                        <strong>True Halftone Effect</strong>
+                        <span id="halftoneLock" style="display:none; font-size:0.75rem; background:rgba(168,85,247,0.15); color:#a855f7; padding:2px 8px; border-radius:50px; border:1px solid rgba(168,85,247,0.3);">PRO</span>
+                    </label>
+                    <small style="color: var(--text-secondary);">Dots organically scale to trace image brightness.</small>
+                </div>
+                
+                <div style="display:flex; flex-direction: column; justify-content: center;">
+                    <label style="display:flex; justify-content: space-between; margin-bottom: 4px;">
+                        <small>Background Opacity</small>
+                        <small id="opacityVal">95%</small>
+                    </label>
+                    <input type="range" id="bgOpacity" min="0" max="100" value="95" style="width: 100%; accent-color: var(--accent-primary);">
+                </div>
+            </div>
+
+            <div class="logo-upload-area" id="logoUploadArea" style="margin-top: 20px; position: relative;">
+                <input type="file" id="logoInput" accept="image/*" style="display: none;">
+                <label for="logoInput" class="upload-label" id="uploadLabel" style="border-style: solid; border-width: 2px;">
+                    <i data-lucide="image"></i>
+                    <span id="logoFileName">Upload Background / Logo</span>
+                    <small>Used for color sampling and halftone mask</small>
+                </label>
+                <!-- Pro lock overlay for bg upload -->
+                <div id="uploadLockOverlay" style="display:none; position:absolute; inset:0; background:rgba(0,0,0,0.55); border-radius:12px; backdrop-filter:blur(3px); flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer;" onclick="showProToast()">
+                    <i data-lucide="lock" style="width:28px;height:28px;color:#a855f7;"></i>
+                    <span style="font-size:0.85rem;font-weight:700;color:#a855f7;">Pro Feature</span>
+                    <small style="color:rgba(255,255,255,0.6);">Upgrade to use background images</small>
+                </div>
+                <div id="logoPreview" class="logo-preview" style="display: none;">
+                    <img id="logoPreviewImg" src="" alt="Background">
+                    <button onclick="removeLogo()" class="btn-remove-logo"><i data-lucide="x"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-column">
+        <div class="preview-card" style="border: 2px solid var(--accent-primary); box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);">
+            <div class="qr-placeholder" id="qrPreview" style="background: #000; padding: 10px; border-radius: 12px; margin-bottom: 20px;">
+                <i data-lucide="sparkles" style="width: 60px; height: 60px; color: var(--accent-primary); opacity: 0.5;"></i>
+                <p style="color: var(--text-secondary); margin-top: 10px;">Your Masterpiece Here</p>
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%; height: 60px; font-size: 1.2rem; background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%); color: #fff; border: none; margin-bottom: 24px;" onclick="renderArtisticPreview()">
+                <i data-lucide="wand-2" style="margin-right: 10px;"></i> Generate Artistic QR
+            </button>
+
+            <div class="download-section-modern">
+                <div class="download-grid-premium">
+                    <!-- PNG -->
+                    <div class="dl-card">
+                        <div class="dl-header">
+                            <span class="dl-format">PNG</span>
+                            <i data-lucide="image" class="dl-icon"></i>
+                        </div>
+                        <button id="downloadPngBtn" class="dl-btn-modern">
+                            <i data-lucide="download"></i> Download PNG
+                        </button>
+                    </div>
+
+                    <!-- SVG -->
+                    <div class="dl-card">
+                        <div class="dl-header">
+                            <span class="dl-format">SVG</span>
+                            <i data-lucide="file-code" class="dl-icon"></i>
+                        </div>
+                        <button id="downloadSvgBtn" class="dl-btn-modern">
+                            <i data-lucide="download"></i> Download SVG
+                        </button>
+                        <small id="svgProNote" style="display:none; color:#a855f7; text-align:center; font-size:0.75rem; margin-top:4px;">🔒 Pro feature</small>
+                    </div>
+
+                    <!-- PDF -->
+                    <div class="dl-card">
+                        <div class="dl-header">
+                            <span class="dl-format">PDF</span>
+                            <i data-lucide="file-type-2" class="dl-icon"></i>
+                        </div>
+                        <button id="downloadPdfBtn" class="dl-btn-modern">
+                            <i data-lucide="download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Studio Specific Logic
+    const logoInput = document.getElementById('logoInput');
+    const qrPreview = document.getElementById('qrPreview');
+    const halftoneToggle = document.getElementById('halftoneToggle');
+    const qualitySelect = document.getElementById('qualitySelect');
+    let currentPlan = 'free';
+
+    function showProToast() {
+        if (typeof showToast === 'function') {
+            showToast('⚡ This is a Pro feature — <a href="/pricing" style="color:#a855f7;text-decoration:underline;">Upgrade to unlock</a>', 'info');
+        }
+    }
+
+    function applyPlanRestrictions(plan) {
+        currentPlan = plan;
+        const isPro = plan === 'trial' || plan === 'monthly' || plan === 'pro' || plan === 'business';
+
+        // Banner
+        const banner = document.getElementById('freePlanBanner');
+        if (banner) banner.style.display = isPro ? 'none' : 'flex';
+
+        // Shape select — disable pro options
+        const shapeSelect = document.getElementById('shapeSelect');
+        Array.from(shapeSelect.options).forEach(opt => {
+            if (opt.dataset.pro === 'true') {
+                opt.disabled = !isPro;
+            }
+        });
+        shapeSelect.addEventListener('change', () => {
+            const chosen = shapeSelect.options[shapeSelect.selectedIndex];
+            if (!isPro && chosen.dataset.pro === 'true') {
+                shapeSelect.value = 'circle';
+                showProToast();
+            }
+        });
+
+        // Finder select — disable pro options
+        const finderSelect = document.getElementById('finderSelect');
+        Array.from(finderSelect.options).forEach(opt => {
+            if (opt.dataset.pro === 'true') {
+                opt.disabled = !isPro;
+            }
+        });
+        finderSelect.addEventListener('change', () => {
+            const chosen = finderSelect.options[finderSelect.selectedIndex];
+            if (!isPro && chosen.dataset.pro === 'true') {
+                finderSelect.value = 'bullseye';
+                showProToast();
+            }
+        });
+
+        // Quality select — disable pro options
+        Array.from(qualitySelect.options).forEach(opt => {
+            if (opt.dataset.pro === 'true') opt.disabled = !isPro;
+        });
+        qualitySelect.addEventListener('change', () => {
+            const chosen = qualitySelect.options[qualitySelect.selectedIndex];
+            if (!isPro && chosen.dataset.pro === 'true') {
+                qualitySelect.value = '16';
+                showProToast();
+            }
+        });
+
+        // Halftone toggle
+        if (!isPro) {
+            halftoneToggle.disabled = true;
+            halftoneToggle.title = 'Pro feature';
+            const lock = document.getElementById('halftoneLock');
+            if (lock) lock.style.display = 'inline';
+            document.getElementById('halftoneWrapper').style.opacity = '0.5';
+            document.getElementById('halftoneWrapper').addEventListener('click', () => { if (!isPro) showProToast(); });
+        }
+
+        // Background upload lock overlay
+        const overlay = document.getElementById('uploadLockOverlay');
+        if (overlay) overlay.style.display = isPro ? 'none' : 'flex';
+
+        // SVG download
+        const svgBtn = document.getElementById('downloadSvgBtn');
+        const svgNote = document.getElementById('svgProNote');
+        if (!isPro) {
+            svgBtn.disabled = true;
+            svgBtn.title = 'SVG export is a Pro feature';
+            svgBtn.style.opacity = '0.4';
+            svgBtn.style.cursor = 'not-allowed';
+            if (svgNote) svgNote.style.display = 'block';
+            svgBtn.addEventListener('click', (e) => { e.preventDefault(); showProToast(); });
+        }
+    }
+
+    // Initialize with Studio defaults
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof selectType === 'function') {
+            selectType('url');
+        }
+        // Fetch plan and apply restrictions
+        fetch('/api/plan').then(r => r.json()).then(d => applyPlanRestrictions(d.plan || 'free'));
+    });
+
+    async function renderArtisticPreview() {
+        const data = collectCurrentData();
+        if (!data) return;
+        
+        const btn = document.querySelector('button[onclick="renderArtisticPreview()"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Rendering...';
+        btn.disabled = true;
+        lucide.createIcons();
+
+        const form = new FormData();
+        form.append('csrf_token', document.querySelector('meta[name="csrf-token"]').content);
+        form.append('data', data);
+        form.append('shape', document.getElementById('shapeSelect').value);
+        form.append('finder', document.getElementById('finderSelect').value);
+        form.append('halftone', halftoneToggle.checked ? 'on' : 'off');
+        form.append('color', document.getElementById('colorInput').value);
+        form.append('quiet_zone', '6');
+        form.append('module_px', qualitySelect.value);
+        form.append('bg_opacity', document.getElementById('bgOpacity').value / 100);
+        
+        if (logoInput.files && logoInput.files[0]) {
+            form.append('logo', logoInput.files[0]);
+        }
+
+        try {
+            const res = await fetch('{{ url_for("api.render_artistic_svg") }}', { method: 'POST', body: form });
+            const json = await res.json();
+            if (json.success) {
+                qrPreview.innerHTML = json.svg;
+                // Add to history
+                if (typeof historyManager !== 'undefined') {
+                    // Convert SVG to data URI for history storage (rough approximation)
+                    const svgBlob = new Blob([json.svg], {type: 'image/svg+xml'});
+                    const url = URL.createObjectURL(svgBlob);
+                    historyManager.add(url, 'artistic', data);
+                }
+            } else {
+                alert(json.error || 'Failed to render');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Service temporary unavailable');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            lucide.createIcons();
+        }
+    }
+
+    function collectCurrentData() {
+        const urlInput = document.querySelector('input[name="url"]');
+        const textArea = document.querySelector('textarea[name="text"]');
+        const ssidInput = document.querySelector('input[name="ssid"]');
+        
+        if (urlInput && urlInput.value) return urlInput.value;
+        if (textArea && textArea.value) return textArea.value;
+        if (ssidInput && ssidInput.value) return "WIFI:S:" + ssidInput.value + ";";
+        
+        return 'https://qrnation.com/studio';
+    }
+
+    // Update opacity label
+    document.getElementById('bgOpacity').addEventListener('input', (e) => {
+        document.getElementById('opacityVal').textContent = e.target.value + '%';
+    });
+
+    // ==========================================
+    // PRESET SYSTEM
+    // ==========================================
+    const presets = {
+        'classic-dots': {
+            shape: 'circle', finder: 'bullseye', color: '#000000',
+            halftone: false, quality: 16, opacity: 95, pro: false
+        },
+        'soft-grid': {
+            shape: 'rounded', finder: 'rounded', color: '#374151',
+            halftone: false, quality: 16, opacity: 95, pro: false
+        },
+        'ocean-crystal': {
+            shape: 'diamond', finder: 'classic', color: '#0ea5e9',
+            halftone: false, quality: 16, opacity: 95, pro: false
+        },
+        'neon-burst': {
+            shape: 'star', finder: 'bullseye', color: '#39ff14',
+            halftone: true, quality: 24, opacity: 90, pro: true
+        },
+        'honeycomb': {
+            shape: 'hexagon', finder: 'rounded', color: '#f59e0b',
+            halftone: true, quality: 24, opacity: 92, pro: true
+        },
+        'liquid-gold': {
+            shape: 'circle', finder: 'bullseye', color: '#ffd700',
+            halftone: true, quality: 32, opacity: 98, pro: true
+        },
+        'midnight-glass': {
+            shape: 'rounded', finder: 'rounded', color: '#9333ea',
+            halftone: true, quality: 24, opacity: 88, pro: true
+        },
+        'geo-frost': {
+            shape: 'diamond', finder: 'diamond', color: '#06b6d4',
+            halftone: true, quality: 32, opacity: 85, pro: true
+        },
+        'rose-heart': {
+            shape: 'heart', finder: 'nested', color: '#f43f5e',
+            halftone: true, quality: 24, opacity: 90, pro: true
+        },
+        'teardrop-bloom': {
+            shape: 'teardrop', finder: 'flower', color: '#22c55e',
+            halftone: true, quality: 32, opacity: 92, pro: true
+        },
+        'obsidian-cross': {
+            shape: 'cross', finder: 'target', color: '#ef4444',
+            halftone: true, quality: 40, opacity: 95, pro: true
+        }
+    };
+
+    function applyPreset(name) {
+        const preset = presets[name];
+        if (!preset) return;
+
+        // Check pro access
+        if (preset.pro && currentPlan === 'free') {
+            showProToast();
+            return;
+        }
+
+        // Apply to controls
+        const shapeSelect = document.getElementById('shapeSelect');
+        const finderSelect = document.getElementById('finderSelect');
+        const colorInput = document.getElementById('colorInput');
+        const qualitySelect = document.getElementById('qualitySelect');
+
+        shapeSelect.value = preset.shape;
+        finderSelect.value = preset.finder;
+        colorInput.value = preset.color;
+        qualitySelect.value = preset.quality;
+        halftoneToggle.checked = preset.halftone;
+        document.getElementById('bgOpacity').value = preset.opacity;
+        document.getElementById('opacityVal').textContent = preset.opacity + '%';
+
+        // Visual feedback on the preset card
+        document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+        const activeCard = document.querySelector(`[onclick="applyPreset('${name}')"]`);
+        if (activeCard) activeCard.classList.add('active');
+
+        showToast(`Applied "${document.querySelector(`[onclick="applyPreset('${name}')"] .preset-name`)?.textContent}" preset`, 'success');
+    }
+
+    // Update preset card lock states
+    function updatePresetLocks(isPro) {
+        document.querySelectorAll('.preset-card').forEach(card => {
+            const isFree = card.dataset.free === 'true';
+            if (!isFree && !isPro) {
+                card.classList.add('locked');
+            } else {
+                card.classList.remove('locked');
+            }
+        });
+    }
+
+    // Override applyPlanRestrictions to also update presets
+    const originalApplyPlan = applyPlanRestrictions;
+    applyPlanRestrictions = function(plan) {
+        originalApplyPlan(plan);
+        updatePresetLocks(plan === 'trial' || plan === 'monthly' || plan === 'pro' || plan === 'business');
+    };
+</script>
+
+<style>
+/* Presets Grid */
+.presets-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-top: 16px;
+}
+@media (max-width: 1200px) {
+    .presets-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+    .presets-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+    .presets-grid { grid-template-columns: 1fr; }
+}
+
+.preset-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+.preset-card:hover {
+    border-color: var(--accent-primary);
+    background: rgba(168, 85, 247, 0.05);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+}
+.preset-card.active {
+    border-color: var(--accent-primary);
+    background: rgba(168, 85, 247, 0.1);
+    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3);
+}
+.preset-card.locked {
+    opacity: 0.5;
+    position: relative;
+}
+.preset-card.locked::after {
+    content: '🔒';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 1rem;
+}
+.preset-card.locked:hover {
+    opacity: 0.7;
+}
+
+.preset-preview {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+.preset-preview svg {
+    width: 100%;
+    height: 100%;
+}
+
+.preset-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+.preset-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+.preset-tag {
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.tag-free {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.tag-pro {
+    background: rgba(168, 85, 247, 0.15);
+    color: #a855f7;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+.tag-business {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.preset-card small {
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    line-height: 1.3;
+}
+</style>
+{% endblock %}

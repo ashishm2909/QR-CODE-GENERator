@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}QR Code Generator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.418.0/dist/umd/lucide.min.js"></script>
+    <script>
+        // Standardized on dark theme
+        document.documentElement.setAttribute('data-theme', 'dark');
+    </script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+
+<body class="layout-col">
+    <div id="toast-container"></div>
+    <header>
+        <div class="container header-content">
+            <a href="{{ url_for('main.index') }}" class="logo-link">
+                <div class="logo">
+                    <i data-lucide="qr-code" style="color: var(--accent-primary); margin-right: 10px;"></i>
+                    QRNation<span>.</span>
+                </div>
+            </a>
+            <nav class="navbar">
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                    <li><a href="{{ url_for('main.generate_qr') }}" class="btn-nav-highlight">Generate QR</a></li>
+                    <li><a href="{{ url_for('main.scanner') }}" style="color: #22c55e;"><i data-lucide="scan" style="width:16px;height:16px;vertical-align:middle;margin-right:2px;"></i> Scanner</a></li>
+                    <li><a href="{{ url_for('main.artistic_studio') }}" style="color: var(--accent-primary);">Artistic
+                            QR Studio</a></li>
+                    <li><a href="{{ url_for('main.pricing') }}">Pricing</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    {% if current_user.is_authenticated %}
+                    {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-outline"
+                        style="border-color: var(--accent-primary); color: var(--accent-primary);">Admin</a>
+                    {% endif %}
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-sm btn-outline">Dashboard</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-primary">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-outline">Log In</a>
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-sm btn-primary">Sign Up</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="logo">
+                    <i data-lucide="qr-code" style="color: var(--accent-primary); margin-right: 10px;"></i>
+                    QRNation<span>.</span>
+                </div>
+                <p class="footer-desc">Premium QR and Barcode tools to create, customize, and track your codes.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="{{ url_for('main.generate_qr') }}">Generate</a></li>
+                    <li><a href="{{ url_for('main.scanner') }}">Scanner</a></li>
+                    <li><a href="{{ url_for('main.templates') }}">Templates</a></li>
+                    <li><a href="{{ url_for('main.pricing') }}">Pricing</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                    <li><a href="{{ url_for('main.terms') }}">Terms</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <div class="footer-bottom-content">
+                <p>&copy; <span id="current-year"></span> QRNation — Premium QR Studio. All rights reserved.</p>
+                <div class="social">
+                    <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                    <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                    <a href="#" aria-label="GitHub"><i data-lucide="github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <script>
+
+        // Premium Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            let iconHtml = '';
+            if (type === 'success') iconHtml = '<i data-lucide="check-circle"></i>';
+            else if (type === 'error') iconHtml = '<i data-lucide="alert-circle"></i>';
+            else iconHtml = '<i data-lucide="info"></i>';
+
+            toast.innerHTML = `
+                <div class="toast-icon">${iconHtml}</div>
+                <div class="toast-message">${message}</div>
+                <button class="toast-close"><i data-lucide="x" size="16"></i></button>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons({ root: toast });
+
+            // Trigger animation
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            // Auto dismiss
+            const timeout = setTimeout(() => dismissToast(toast), 4000);
+
+            // Manual close
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                clearTimeout(timeout);
+                dismissToast(toast);
+            });
+        }
+
+        function dismissToast(toast) {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 400);
+        }
+
+        // Global override for alerts (Optional - replacing basic alerts with toasts)
+        window.originalAlert = window.alert;
+        window.alert = function (message) {
+            showToast(message, 'info');
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+
+            // Initialize VanillaTilt globally on all interactive cards
+            if (typeof VanillaTilt !== 'undefined') {
+                VanillaTilt.init(document.querySelectorAll(".bento-card, .qr-card-premium, .pricing-card"), {
+                    max: 5,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.15,
+                });
+            }
+
+            // Initialize current year
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Initialize icons
+            lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>

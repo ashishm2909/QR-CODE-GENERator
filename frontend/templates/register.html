@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Join QRNation</h2>
+        <p>Start creating professional QR codes today</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('auth.signup') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" class="form-input" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number <small style="color: var(--text-secondary);">(for UPI payments)</small></label>
+                <input type="tel" name="phone" class="form-input" placeholder="+91 98765 43210">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-input" placeholder="••••••••" required minlength="8">
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-input" placeholder="••••••••" required minlength="8">
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 24px;">
+                By signing up, you agree to our Terms of Service and Privacy Policy.
+            </p>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign in here</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    padding: 40px 20px;
+}
+.auth-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+.auth-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.auth-card p {
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 30px;
+}
+.alert {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.auth-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+.auth-footer a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+</style>
+{% endblock %}

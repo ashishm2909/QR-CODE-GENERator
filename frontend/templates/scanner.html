@@ -1,0 +1,518 @@
+{% extends "base.html" %}
+
+{% block title %}QR Scanner - QRNation{% endblock %}
+
+{% block content %}
+<section class="hero-premium" style="text-align:center; margin: 20px 0 30px;">
+    <h1><i data-lucide="scan" style="width:36px;height:36px;color:var(--accent-primary);vertical-align:middle;margin-right:8px;"></i> QR Scanner</h1>
+    <p>Upload an image or use your camera to scan any QR code instantly.</p>
+</section>
+
+<div class="scanner-layout">
+    <!-- Left: Input Methods -->
+    <div class="scanner-input-col">
+        <!-- Tab Switcher -->
+        <div class="scanner-tabs">
+            <button class="scanner-tab active" onclick="switchTab('upload')">
+                <i data-lucide="upload"></i> Upload Image
+            </button>
+            <button class="scanner-tab" onclick="switchTab('camera')">
+                <i data-lucide="camera"></i> Open Camera
+            </button>
+        </div>
+
+        <!-- Upload Panel -->
+        <div class="scanner-panel" id="uploadPanel">
+            <div class="scan-dropzone" id="dropzone">
+                <input type="file" id="fileInput" accept="image/*" style="display:none;">
+                <div class="dropzone-content">
+                    <div class="dropzone-icon">
+                        <i data-lucide="image-plus"></i>
+                    </div>
+                    <p class="dropzone-title">Drop QR image here</p>
+                    <p class="dropzone-subtitle">or click to browse</p>
+                    <small style="color:var(--text-secondary);">PNG, JPG, WEBP supported</small>
+                </div>
+                <div class="dropzone-preview" id="dropzonePreview" style="display:none;">
+                    <img id="previewImg" src="" alt="Preview">
+                    <button class="btn-remove-preview" onclick="clearUpload()">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+            </div>
+            <button class="btn btn-primary scan-btn" id="scanUploadBtn" onclick="scanUploaded()" disabled>
+                <i data-lucide="search"></i> Scan QR Code
+            </button>
+        </div>
+
+        <!-- Camera Panel -->
+        <div class="scanner-panel" id="cameraPanel" style="display:none;">
+            <div class="camera-container">
+                <video id="cameraFeed" autoplay playsinline></video>
+                <div class="camera-overlay">
+                    <div class="scan-frame">
+                        <div class="scan-corner tl"></div>
+                        <div class="scan-corner tr"></div>
+                        <div class="scan-corner bl"></div>
+                        <div class="scan-corner br"></div>
+                        <div class="scan-line"></div>
+                    </div>
+                </div>
+                <canvas id="cameraCanvas" style="display:none;"></canvas>
+            </div>
+            <div class="camera-controls">
+                <button class="btn btn-primary scan-btn" id="startCameraBtn" onclick="startCamera()">
+                    <i data-lucide="camera"></i> Start Camera
+                </button>
+                <button class="btn btn-outline scan-btn" id="stopCameraBtn" onclick="stopCamera()" style="display:none;">
+                    <i data-lucide="camera-off"></i> Stop Camera
+                </button>
+            </div>
+            <p class="camera-hint">Point your camera at a QR code — it will scan automatically.</p>
+        </div>
+    </div>
+
+    <!-- Right: Result -->
+    <div class="scanner-result-col">
+        <div class="result-card" id="resultCard">
+            <div class="result-placeholder" id="resultPlaceholder">
+                <i data-lucide="scan-line" style="width:48px;height:48px;color:var(--accent-primary);opacity:0.4;"></i>
+                <p>Scan a QR code to see the result here</p>
+            </div>
+            <div class="result-content" id="resultContent" style="display:none;">
+                <div class="result-header">
+                    <i data-lucide="check-circle" style="color:#22c55e;width:24px;height:24px;"></i>
+                    <span>QR Code Detected</span>
+                </div>
+                <div class="result-type" id="resultType"></div>
+                <div class="result-data" id="resultData"></div>
+                <div class="result-actions" id="resultActions"></div>
+            </div>
+            <div class="result-error" id="resultError" style="display:none;">
+                <i data-lucide="alert-circle" style="color:#ef4444;width:48px;height:48px;"></i>
+                <p id="errorMessage">No QR code found in this image.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.scanner-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    max-width: 1000px;
+    margin: 0 auto 60px;
+}
+@media (max-width: 768px) {
+    .scanner-layout { grid-template-columns: 1fr; }
+}
+
+/* Tabs */
+.scanner-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.scanner-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s;
+}
+.scanner-tab:hover { border-color: var(--accent-primary); color: var(--text-primary); }
+.scanner-tab.active {
+    border-color: var(--accent-primary);
+    background: rgba(168,85,247,0.08);
+    color: var(--accent-primary);
+}
+.scanner-tab i { width: 18px; height: 18px; }
+
+/* Dropzone */
+.scan-dropzone {
+    border: 2px dashed var(--border-color);
+    border-radius: 16px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+}
+.scan-dropzone:hover, .scan-dropzone.drag-over {
+    border-color: var(--accent-primary);
+    background: rgba(168,85,247,0.04);
+}
+.dropzone-icon i { width: 48px; height: 48px; color: var(--accent-primary); opacity: 0.6; }
+.dropzone-title { font-weight: 600; margin: 12px 0 4px; font-size: 1.05rem; }
+.dropzone-subtitle { color: var(--text-secondary); font-size: 0.9rem; }
+
+.dropzone-preview {
+    position: relative;
+    width: 100%;
+}
+.dropzone-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 10px;
+    object-fit: contain;
+}
+.btn-remove-preview {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-remove-preview i { width: 14px; height: 14px; }
+
+.scan-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.scan-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Camera */
+.camera-container {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    aspect-ratio: 4/3;
+}
+.camera-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.camera-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.scan-frame {
+    width: 200px;
+    height: 200px;
+    position: relative;
+}
+.scan-corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: var(--accent-primary);
+    border-style: solid;
+    border-width: 0;
+}
+.scan-corner.tl { top:0;left:0; border-top-width:3px; border-left-width:3px; border-radius:4px 0 0 0; }
+.scan-corner.tr { top:0;right:0; border-top-width:3px; border-right-width:3px; border-radius:0 4px 0 0; }
+.scan-corner.bl { bottom:0;left:0; border-bottom-width:3px; border-left-width:3px; border-radius:0 0 0 4px; }
+.scan-corner.br { bottom:0;right:0; border-bottom-width:3px; border-right-width:3px; border-radius:0 0 4px 0; }
+.scan-line {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: var(--accent-primary);
+    box-shadow: 0 0 12px var(--accent-primary);
+    animation: scanAnim 2s ease-in-out infinite;
+}
+@keyframes scanAnim {
+    0%, 100% { top: 10%; }
+    50% { top: 88%; }
+}
+.camera-controls { margin-top: 14px; }
+.camera-hint {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    margin-top: 10px;
+}
+
+/* Result Card */
+.result-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 32px 24px;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.result-placeholder { text-align: center; }
+.result-placeholder p { color: var(--text-secondary); margin-top: 14px; }
+
+.result-content { width: 100%; }
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+}
+.result-type {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: rgba(168,85,247,0.15);
+    color: var(--accent-primary);
+    border: 1px solid rgba(168,85,247,0.3);
+    margin-bottom: 16px;
+}
+.result-data {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.result-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.result-actions .btn { flex: 1; min-width: 120px; justify-content: center; }
+
+.result-error { text-align: center; }
+.result-error p { color: var(--text-secondary); margin-top: 14px; }
+</style>
+
+<script>
+    let cameraStream = null;
+    let scanInterval = null;
+    let uploadedFile = null;
+
+    // ==================== TAB SWITCHING ====================
+    function switchTab(tab) {
+        document.querySelectorAll('.scanner-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.scanner-panel').forEach(p => p.style.display = 'none');
+
+        if (tab === 'upload') {
+            document.querySelector('.scanner-tab:first-child').classList.add('active');
+            document.getElementById('uploadPanel').style.display = 'block';
+            stopCamera();
+        } else {
+            document.querySelector('.scanner-tab:last-child').classList.add('active');
+            document.getElementById('cameraPanel').style.display = 'block';
+        }
+    }
+
+    // ==================== UPLOAD ====================
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+    dropzone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropzone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+
+    function handleFile(file) {
+        if (!file.type.startsWith('image/')) {
+            showToast('Please upload an image file', 'error');
+            return;
+        }
+        uploadedFile = file;
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.querySelector('.dropzone-content').style.display = 'none';
+            document.getElementById('dropzonePreview').style.display = 'block';
+            document.getElementById('previewImg').src = e.target.result;
+            document.getElementById('scanUploadBtn').disabled = false;
+            lucide.createIcons();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearUpload() {
+        uploadedFile = null;
+        fileInput.value = '';
+        document.querySelector('.dropzone-content').style.display = '';
+        document.getElementById('dropzonePreview').style.display = 'none';
+        document.getElementById('scanUploadBtn').disabled = true;
+        lucide.createIcons();
+    }
+
+    async function scanUploaded() {
+        if (!uploadedFile) return;
+        const btn = document.getElementById('scanUploadBtn');
+        btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Scanning...';
+        btn.disabled = true;
+        lucide.createIcons();
+
+        const formData = new FormData();
+        formData.append('image', uploadedFile);
+        formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').content);
+
+        try {
+            const resp = await fetch('/api/scan-qr', { method: 'POST', body: formData });
+            const data = await resp.json();
+            if (data.success) {
+                showResult(data.type, data.data);
+            } else {
+                showError(data.error || 'No QR code found');
+            }
+        } catch (e) {
+            showError('Failed to scan image. Please try again.');
+        }
+
+        btn.innerHTML = '<i data-lucide="search"></i> Scan QR Code';
+        btn.disabled = false;
+        lucide.createIcons();
+    }
+
+    // ==================== CAMERA ====================
+    async function startCamera() {
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+            });
+            const video = document.getElementById('cameraFeed');
+            video.srcObject = cameraStream;
+            document.getElementById('startCameraBtn').style.display = 'none';
+            document.getElementById('stopCameraBtn').style.display = '';
+
+            // Auto-scan every 1.5 seconds
+            scanInterval = setInterval(captureAndScan, 1500);
+        } catch (e) {
+            showToast('Camera access denied. Please allow camera permission.', 'error');
+        }
+    }
+
+    function stopCamera() {
+        if (scanInterval) { clearInterval(scanInterval); scanInterval = null; }
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(t => t.stop());
+            cameraStream = null;
+        }
+        const video = document.getElementById('cameraFeed');
+        if (video) video.srcObject = null;
+        document.getElementById('startCameraBtn').style.display = '';
+        document.getElementById('stopCameraBtn').style.display = 'none';
+    }
+
+    async function captureAndScan() {
+        const video = document.getElementById('cameraFeed');
+        const canvas = document.getElementById('cameraCanvas');
+        if (!video.videoWidth) return;
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+
+        canvas.toBlob(async blob => {
+            const formData = new FormData();
+            formData.append('image', blob, 'frame.png');
+            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').content);
+
+            try {
+                const resp = await fetch('/api/scan-qr', { method: 'POST', body: formData });
+                const data = await resp.json();
+                if (data.success) {
+                    stopCamera();
+                    showResult(data.type, data.data);
+                }
+            } catch (e) {}
+        }, 'image/png');
+    }
+
+    // ==================== RESULT DISPLAY ====================
+    function showResult(type, data) {
+        document.getElementById('resultPlaceholder').style.display = 'none';
+        document.getElementById('resultError').style.display = 'none';
+        document.getElementById('resultContent').style.display = '';
+
+        document.getElementById('resultType').textContent = type.toUpperCase();
+        document.getElementById('resultData').textContent = data;
+
+        const actions = document.getElementById('resultActions');
+        actions.innerHTML = '';
+
+        // Copy button
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn btn-outline';
+        copyBtn.innerHTML = '<i data-lucide="copy"></i> Copy';
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(data);
+            showToast('Copied to clipboard!', 'success');
+        };
+        actions.appendChild(copyBtn);
+
+        // If it's a URL, add open button
+        if (type === 'url' || data.startsWith('http://') || data.startsWith('https://')) {
+            const openBtn = document.createElement('a');
+            openBtn.className = 'btn btn-primary';
+            openBtn.href = data;
+            openBtn.target = '_blank';
+            openBtn.rel = 'noopener';
+            openBtn.innerHTML = '<i data-lucide="external-link"></i> Open Link';
+            actions.appendChild(openBtn);
+        }
+
+        // If WiFi
+        if (type === 'wifi' || data.startsWith('WIFI:')) {
+            const wifiInfo = document.createElement('div');
+            wifiInfo.style.cssText = 'margin-top:12px;font-size:0.85rem;color:var(--text-secondary);';
+            const ssid = data.match(/S:([^;]*)/)?.[1] || '';
+            const pass = data.match(/P:([^;]*)/)?.[1] || '';
+            const enc = data.match(/T:([^;]*)/)?.[1] || '';
+            wifiInfo.innerHTML = `<strong>Network:</strong> ${ssid}<br><strong>Password:</strong> ${pass}<br><strong>Security:</strong> ${enc}`;
+            actions.appendChild(wifiInfo);
+        }
+
+        lucide.createIcons();
+    }
+
+    function showError(msg) {
+        document.getElementById('resultPlaceholder').style.display = 'none';
+        document.getElementById('resultContent').style.display = 'none';
+        document.getElementById('resultError').style.display = '';
+        document.getElementById('errorMessage').textContent = msg;
+        lucide.createIcons();
+    }
+</script>
+{% endblock %}

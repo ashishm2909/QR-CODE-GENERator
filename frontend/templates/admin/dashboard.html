@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - QRNation{% endblock %}
+
+{% block content %}
+<div class="admin-container fade-in-up">
+    <div class="header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1 class="main-title" style="margin-bottom: 0;">Admin <span class="highlight">Dashboard</span></h1>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="stats-badge" style="background: rgba(255,215,0,0.1); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--accent-primary);">
+                <span style="color: var(--accent-primary); font-weight: 600;">Total QRs: {{ qr_stats.total }}</span>
+                <span style="color: var(--text-secondary); margin-left: 15px;">Artistic: {{ qr_stats.artistic }}</span>
+            </div>
+            <a href="{{ url_for('admin.admin_logout') }}" class="btn btn-sm btn-outline" style="border-color: rgba(239, 68, 68, 0.3); color: #ef4444;">
+                <i data-lucide="log-out" style="width:14px;height:14px;margin-right:4px;"></i> Admin Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="admin-grid" style="display: grid; gap: 24px;">
+        <div class="bento-card" style="min-height: auto; padding: 0; overflow: hidden;">
+            <div class="table-responsive" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background: rgba(255,255,255,0.05); border-bottom: 1px solid var(--border-color);">
+                            <th style="padding: 16px 24px; color: var(--text-secondary);">User</th>
+                            <th style="padding: 16px 24px; color: var(--text-secondary);">Plan</th>
+                            <th style="padding: 16px 24px; color: var(--text-secondary);">Role</th>
+                            <th style="padding: 16px 24px; color: var(--text-secondary);">Joined</th>
+                            <th style="padding: 16px 24px; color: var(--text-secondary); text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,215,0,0.02)'" onmouseout="this.style.background='transparent'">
+                            <td style="padding: 16px 24px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 32px; height: 32px; background: var(--bg-tertiary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent-primary);">
+                                        <i data-lucide="user" size="16"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600;">{{ user.email }}</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">ID: {{ user.id }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 16px 24px;">
+                                <select onchange="updateUserPlan({{ user.id }}, this.value)" style="background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 8px; font-size: 0.85rem;">
+                                    <option value="free" {% if user.plan == 'free' %}selected{% endif %}>Free</option>
+                                    <option value="pro" {% if user.plan == 'pro' %}selected{% endif %}>Pro</option>
+                                    <option value="business" {% if user.plan == 'business' %}selected{% endif %}>Business</option>
+                                </select>
+                            </td>
+                            <td style="padding: 16px 24px;">
+                                <span class="badge" style="padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; {% if user.is_admin %}background: rgba(168, 85, 247, 0.2); color: #c084fc;{% else %}background: rgba(255,255,255,0.1); color: var(--text-secondary);{% endif %}">
+                                    {{ 'Admin' if user.is_admin else 'User' }}
+                                </span>
+                            </td>
+                            <td style="padding: 16px 24px; color: var(--text-secondary); font-size: 0.9rem;">
+                                {{ user.created_at.strftime('%Y-%m-%d') }}
+                            </td>
+                            <td style="padding: 16px 24px; text-align: right;">
+                                <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                    <button onclick="toggleAdmin({{ user.id }})" class="btn-icon" title="Toggle Admin Role" style="background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 6px; border-radius: 6px; cursor: pointer;">
+                                        <i data-lucide="shield-check" size="18"></i>
+                                    </button>
+                                    <button onclick="confirmDeleteUser({{ user.id }}, '{{ user.email }}')" class="btn-icon" title="Delete User" style="background: none; border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; padding: 6px; border-radius: 6px; cursor: pointer;">
+                                        <i data-lucide="trash-2" size="18"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    async function toggleAdmin(userId) {
+        try {
+            const resp = await fetch(`/admin/toggle-admin/${userId}`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrfToken }
+            });
+            const data = await resp.json();
+            if (data.success) {
+                showToast(`User admin status updated to: ${data.is_admin}`, 'success');
+                location.reload();
+            } else {
+                showToast(data.error || 'Failed to update admin status', 'error');
+            }
+        } catch (e) {
+            showToast('Network error', 'error');
+        }
+    }
+
+    async function updateUserPlan(userId, plan) {
+        try {
+            const resp = await fetch(`/admin/update-plan/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ plan })
+            });
+            const data = await resp.json();
+            if (data.success) {
+                showToast('Plan updated successfully', 'success');
+            } else {
+                showToast(data.error || 'Failed to update plan', 'error');
+            }
+        } catch (e) {
+            showToast('Network error', 'error');
+        }
+    }
+
+    function confirmDeleteUser(userId, email) {
+        if (confirm(`Are you sure you want to delete user ${email}? This will also delete all their QR codes.`)) {
+            deleteUser(userId);
+        }
+    }
+
+    async function deleteUser(userId) {
+        try {
+            const resp = await fetch(`/admin/delete-user/${userId}`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrfToken }
+            });
+            const data = await resp.json();
+            if (data.success) {
+                showToast('User deleted successfully', 'success');
+                location.reload();
+            } else {
+                showToast(data.error || 'Failed to delete user', 'error');
+            }
+        } catch (e) {
+            showToast('Network error', 'error');
+        }
+    }
+</script>
+{% endblock %}

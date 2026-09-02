@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}QRNation - Premium QR Code & Barcode Generator{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="hero-bg-glow"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section centered-hero">
+        <div class="hero-content text-center fade-in-up">
+            <h1 class="main-title">
+                Create & Customize Your <br>
+                Dynamic QR Code For <span class="highlight">FREE</span>
+            </h1>
+            <p class="hero-subtitle">
+                Easily generate, manage and statistically track your QR codes.
+                Supports URL, Text, WiFi, Images, PDF and more.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- Bento Grid Section -->
+    <section class="bento-section">
+        <div class="container">
+            <!-- <div class="bento-section-label fade-in-scroll">
+                <h2>Generate Any Type of QR Code, <span class="highlight">Instantly</span></h2>
+                <p>From social links to WiFi credentials — every QR type in one place.</p>
+            </div> -->
+            <div class="bento-grid fade-in-scroll">
+
+                <!-- URL (Big Card) -->
+                <a href="{{ url_for('main.generate_qr', type='url') }}" class="bento-card card-large">
+                    <div class="card-icon">
+                        <i data-lucide="link"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>URL / Link</h3>
+                        <div class="mockup-line"></div>
+                        <div class="mockup-input">https://example.com</div>
+                    </div>
+                    <div class="card-arrow"><i data-lucide="arrow-right"></i></div>
+                </a>
+
+                <!-- List of Links (Standard) -->
+                <a href="{{ url_for('main.generate_qr', type='list_links') }}" class="bento-card">
+                    <div class="card-top">
+                        <div class="card-icon"><i data-lucide="list"></i></div>
+                        <div class="card-arrow"><i data-lucide="arrow-right"></i></div>
+                    </div>
+                    <h3>List of Links</h3>
+                    <div class="phone-mockup-mini">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </a>
+
+                <!-- PDF (Standard) -->
+                <a href="{{ url_for('main.generate_qr', type='pdf') }}" class="bento-card">
+                    <div class="card-top">
+                        <div class="card-icon"><i data-lucide="file-text"></i></div>
+                        <div class="card-arrow"><i data-lucide="arrow-right"></i></div>
+                    </div>
+                    <h3>PDF</h3>
+                    <div class="file-mockup">PDF</div>
+                </a>
+
+                <!-- Image (Big Card) -->
+                <a href="{{ url_for('main.generate_qr', type='image') }}" class="bento-card card-large">
+                    <div class="card-icon">
+                        <i data-lucide="image"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Image</h3>
+                        <div class="img-mockup-grid">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="card-arrow"><i data-lucide="arrow-right"></i></div>
+                </a>
+
+                <!-- Apps (Standard) -->
+                <a href="{{ url_for('main.generate_qr', type='app') }}" class="bento-card">
+                    <div class="card-top">
+                        <div class="card-icon"><i data-lucide="layout-grid"></i></div>
+                        <div class="card-arrow"><i data-lucide="arrow-right"></i></div>
+                    </div>
+                    <h3>Apps</h3>
+                </a>
+
+                <!-- Text (Standard) -->
+                <a href="{{ url_for('main.generate_qr', type='text') }}" class="bento-card">
+                    <div class="card-top">
+                        <div class="card-icon"><i data-lucide="type"></i></div>
+                        <div class="card-arrow"><i data-lucide="arrow-right"></i></div>
+                    </div>
+                    <h3>Text</h3>
+                </a>
+
+                <!-- Audio (Standard) -->
+                <a href="{{ url_for('main.generate_qr', type='audio') }}" class="bento-card">
+                    <div class="card-top">
+                        <div class="card-icon"><i data-lucide="music"></i></div>
+                        <div class="card-arrow"><i data-lucide="arrow-right"></i></div>
+                    </div>
+                    <h3>Audio</h3>
+                </a>
+
+                <!-- WiFi (Standard — same style as Audio) -->
+                <a href="{{ url_for('main.generate_qr', type='wifi') }}" class="bento-card">
+                    <div class="card-top">
+                        <div class="card-icon"><i data-lucide="wifi"></i></div>
+                        <div class="card-arrow"><i data-lucide="arrow-right"></i></div>
+                    </div>
+                    <h3>WiFi</h3>
+                </a>
+
+                <!-- QR Scanner (Big Card) -->
+                <a href="{{ url_for('main.scanner') }}" class="bento-card card-large" style="border:1px solid rgba(34,197,94,0.3);">
+                    <div class="card-icon" style="background:rgba(34,197,94,0.1);">
+                        <i data-lucide="scan" style="color:#22c55e;"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>QR Scanner</h3>
+                        <div class="mockup-line" style="background:#22c55e;"></div>
+                        <div class="mockup-input" style="border-color:rgba(34,197,94,0.3);">Upload or Camera Scan</div>
+                    </div>
+                    <div class="card-arrow"><i data-lucide="arrow-right" style="color:#22c55e;"></i></div>
+                </a>
+
+                <!-- vCard stacked above WhatsApp in same column -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <a href="{{ url_for('main.generate_qr', type='vcard') }}" class="bento-card card-small">
+                        <i data-lucide="contact"></i> <span>vCard</span>
+                    </a>
+                    <a href="{{ url_for('main.generate_qr', type='whatsapp') }}" class="bento-card card-small">
+                        <i data-lucide="message-circle"></i> <span>WhatsApp</span>
+                    </a>
+                </div>
+
+                <!-- YouTube -->
+                <a href="{{ url_for('main.generate_qr', type='youtube') }}" class="bento-card card-small">
+                    <i data-lucide="youtube"></i> <span>YouTube</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Artistic QR Studio Showcase Section -->
+    <section class="artistic-showcase-section fade-in-scroll">
+        <div class="container">
+
+            <!-- Section Header -->
+            <div class="artistic-section-header">
+                <div class="artistic-badge">
+                    <i data-lucide="sparkles"></i>
+                    <span>NEW FEATURE</span>
+                </div>
+                <h2 class="artistic-section-title">
+                    Artistic QR Studio
+                    <span class="artistic-gradient-text">— Where Art Meets Function</span>
+                </h2>
+                <p class="artistic-section-desc">
+                    Go beyond boring black-and-white. Blend any image into your QR code with
+                    true halftone rendering, custom dot shapes, and real-time previews.
+                </p>
+            </div>
+
+            <!-- Feature Cards + QR Demo Row -->
+            <div class="artistic-showcase-grid">
+
+                <!-- Left: Feature Pills -->
+                <div class="artistic-features-col">
+                    <div class="artistic-feature-pill" style="animation-delay: 0s">
+                        <div class="pill-icon"><i data-lucide="layers"></i></div>
+                        <div>
+                            <strong>6 Module Shapes</strong>
+                            <p>Circle, Diamond, Rounded, Square, Star, Hexagon</p>
+                        </div>
+                    </div>
+                    <div class="artistic-feature-pill" style="animation-delay: 0.1s">
+                        <div class="pill-icon"><i data-lucide="image"></i></div>
+                        <div>
+                            <strong>True Halftone Rendering</strong>
+                            <p>Dots physically scale to trace your image's brightness</p>
+                        </div>
+                    </div>
+                    <div class="artistic-feature-pill" style="animation-delay: 0.2s">
+                        <div class="pill-icon"><i data-lucide="sliders-horizontal"></i></div>
+                        <div>
+                            <strong>Full Design Control</strong>
+                            <p>Adjust color, finder style &amp; background opacity</p>
+                        </div>
+                    </div>
+                    <div class="artistic-feature-pill" style="animation-delay: 0.3s">
+                        <div class="pill-icon"><i data-lucide="download"></i></div>
+                        <div>
+                            <strong>Export PNG, SVG, PDF</strong>
+                            <p>Print-ready quality with one click</p>
+                        </div>
+                    </div>
+
+                    <a href="{{ url_for('main.artistic_studio') }}" class="btn btn-primary artistic-cta-btn">
+                        <i data-lucide="wand-2"></i>
+                        Open Artistic Studio
+                    </a>
+                </div>
+
+                <!-- Right: Animated QR Dots Preview -->
+                <div class="artistic-preview-col">
+                    <div class="qr-art-canvas">
+                        <div class="qr-art-glow"></div>
+                        <!-- Animated QR Matrix dots -->
+                        <div class="qr-dot-grid" id="artQrGrid"></div>
+                        <!-- Floating labels -->
+                        <div class="art-float-chip chip-shape">⬡ Hexagon</div>
+                        <div class="art-float-chip chip-color">🎨 Any Color</div>
+                        <div class="art-float-chip chip-halftone">◉ Halftone</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Templates Section -->
+    <section class="templates-section">
+        <div class="container section-header fade-in-scroll">
+            <h2 class="section-title">Power Of QR Codes With Easy-To-Use <span class="highlight-text">Templates</span>
+            </h2>
+            <p class="section-desc">Transform the way you share information with our customizable QR code templates.</p>
+        </div>
+
+        <div class="templates-carousel fade-in-scroll">
+            <!-- Mock Template Cards -->
+            <div class="template-card">
+                <div class="template-preview t-pdf">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <i data-lucide="file-text" size="40"></i>
+                            <p>PDF Document</p>
+                            <button class="btn-xs">View</button>
+                        </div>
+                    </div>
+                </div>
+                <h3>PDF</h3>
+            </div>
+
+            <div class="template-card">
+                <div class="template-preview t-links">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="avatar-circle"></div>
+                            <div class="link-bar"></div>
+                            <div class="link-bar"></div>
+                            <div class="link-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <h3>List of Links</h3>
+            </div>
+
+            <div class="template-card">
+                <div class="template-preview t-wifi">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <i data-lucide="wifi" size="40"></i>
+                            <p>Connect to WiFi</p>
+                        </div>
+                    </div>
+                </div>
+                <h3>WiFi Access</h3>
+            </div>
+            <div class="template-card">
+                <div class="template-preview t-image">
+                    <div class="phone-frame">
+                        <div class="screen p-0">
+                            <div class="full-img"></div>
+                        </div>
+                    </div>
+                </div>
+                <h3>Images</h3>
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in-scroll, .fade-in-up').forEach(el => observer.observe(el));
+
+        // Generate animated artistic QR dot preview
+        const grid = document.getElementById('artQrGrid');
+        if (grid) {
+            const COLS = 14;
+            const ROWS = 14;
+            // Rough QR pattern: 1 = dot, 0 = empty
+            const pattern = [
+                [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0],
+                [1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1],
+                [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+                [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0],
+                [1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0],
+                [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1],
+                [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1],
+                [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+                [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0],
+                [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            ];
+
+            const colors = ['#a855f7', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#e11d48'];
+
+            for (let y = 0; y < ROWS; y++) {
+                for (let x = 0; x < COLS; x++) {
+                    const dot = document.createElement('div');
+                    if (pattern[y][x]) {
+                        dot.className = 'qr-dot';
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        const delay = (Math.random() * 2).toFixed(2);
+                        const size = (0.5 + Math.random() * 0.5).toFixed(2);
+                        dot.style.cssText = `
+                            background: ${color};
+                            animation-delay: ${delay}s;
+                            transform: scale(${size});
+                            box-shadow: 0 0 6px ${color}66;
+                        `;
+                    }
+                    grid.appendChild(dot);
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

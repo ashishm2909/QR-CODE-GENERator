@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-premium hero-standard fade-in-up">
+    <h1>Create Custom QR Codes</h1>
+    <p>Generate premium, trackable, and customizable QR codes in seconds.</p>
+</section>
+
+<div class="generator-layout">
+    <div class="main-column">
+        <!-- Type Selector -->
+        <h3 style="color: var(--text-secondary); margin-bottom: 20px;">Choose The Type</h3>
+        <div class="type-grid">
+            <div class="type-btn active" onclick="selectType('url')">
+                <i data-lucide="link"></i>
+                <span>URL</span>
+            </div>
+            <div class="type-btn" onclick="selectType('pdf')">
+                <i data-lucide="file-text"></i>
+                <span>PDF</span>
+            </div>
+            <div class="type-btn" onclick="selectType('image')">
+                <i data-lucide="image"></i>
+                <span>Image</span>
+            </div>
+            <div class="type-btn" onclick="selectType('app')">
+                <i data-lucide="layout-grid"></i>
+                <span>App Markets</span>
+            </div>
+            <div class="type-btn" onclick="selectType('text')">
+                <i data-lucide="type"></i>
+                <span>Text</span>
+            </div>
+            <div class="type-btn" onclick="selectType('maps')">
+                <i data-lucide="map-pin"></i>
+                <span>Maps</span>
+            </div>
+            <div class="type-btn" onclick="selectType('wifi')">
+                <i data-lucide="wifi"></i>
+                <span>WiFi</span>
+            </div>
+            <div class="type-btn" onclick="selectType('audio')">
+                <i data-lucide="music"></i>
+                <span>Audio</span>
+            </div>
+            <div class="type-btn" onclick="selectType('whatsapp')">
+                <i data-lucide="message-circle"></i>
+                <span>WhatsApp</span>
+            </div>
+            <div class="type-btn" onclick="selectType('youtube')">
+                <i data-lucide="youtube"></i>
+                <span>YouTube</span>
+            </div>
+            <div class="type-btn" onclick="selectType('instagram')">
+                <i data-lucide="instagram"></i>
+                <span>Instagram</span>
+            </div>
+            <div class="type-btn" onclick="selectType('facebook')">
+                <i data-lucide="facebook"></i>
+                <span>Facebook</span>
+            </div>
+            <div class="type-btn" onclick="selectType('telegram')">
+                <i data-lucide="send"></i>
+                <span>Telegram</span>
+            </div>
+            <div class="type-btn" onclick="selectType('mail')">
+                <i data-lucide="mail"></i>
+                <span>Email</span>
+            </div>
+            <div class="type-btn" onclick="selectType('tiktok')">
+                <i data-lucide="video"></i>
+                <span>TikTok</span>
+            </div>
+            <div class="type-btn" onclick="selectType('video')">
+                <i data-lucide="film"></i>
+                <span>Video File</span>
+            </div>
+            <div class="type-btn" onclick="selectType('pptx')">
+                <i data-lucide="presentation"></i>
+                <span>PPTX</span>
+            </div>
+            <div class="type-btn" onclick="selectType('vcard')">
+                <i data-lucide="contact"></i>
+                <span>vCard</span>
+            </div>
+            <div class="type-btn" onclick="selectType('phone')">
+                <i data-lucide="phone"></i>
+                <span>Phone</span>
+            </div>
+            <div class="type-btn" onclick="selectType('sms')">
+                <i data-lucide="message-square"></i>
+                <span>SMS</span>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section" id="inputDetails">
+            <!-- Dynamic Content Loaded Here -->
+        </div>
+
+        <!-- Logo Customization Section -->
+        <div class="customization-section">
+            <div class="section-header-small">
+                <h3>⚡ Generate QR <span class="badge-new">FREE</span></h3>
+                <p>Create customizable QR codes. Add a logo for brand recognition.</p>
+            </div>
+
+            <div class="logo-upload-area">
+                <input type="file" id="logoInput" accept="image/*" style="display: none;">
+                <label for="logoInput" class="upload-label">
+                    <i data-lucide="upload-cloud"></i>
+                    <span id="logoFileName">Click to upload image/logo</span>
+                    <small>PNG, JPG, SVG (Max 2MB)</small>
+                </label>
+                <div id="logoPreview" class="logo-preview" style="display: none;">
+                    <img id="logoPreviewImg" src="" alt="Logo">
+                    <button onclick="removeLogo()" class="btn-remove-logo"><i data-lucide="x"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-column"><br><br>
+        <div class="preview-card">
+            <div class="qr-placeholder" id="qrPreview">
+                <!-- QR Code will appear here -->
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=example" alt="QR Preview"
+                    style="opacity: 0.5;">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="generateQR()">
+                Generate QR Code
+            </button>
+            <div class="download-section-modern">
+                <div class="download-grid-premium">
+                    <!-- PNG -->
+                    <div class="dl-card">
+                        <div class="dl-header">
+                            <span class="dl-format">PNG</span>
+                            <i data-lucide="image" class="dl-icon"></i>
+                        </div>
+                        <select id="pngQuality" class="dl-quality-select">
+                            <option value="480">480 px (Free)</option>
+                            <option value="720">720 px (Pro)</option>
+                            <option value="1080">1080 px (Pro)</option>
+                        </select>
+                        <button id="downloadPngBtn" class="dl-btn-modern">
+                            <i data-lucide="download"></i> Download
+                        </button>
+                    </div>
+
+                    <!-- SVG -->
+                    <div class="dl-card">
+                        <div class="dl-header">
+                            <span class="dl-format">SVG</span>
+                            <i data-lucide="file-code" class="dl-icon"></i>
+                        </div>
+                        <select id="svgQuality" class="dl-quality-select">
+                            <option value="480">Vector (Free)</option>
+                            <option value="720">Vector (Pro)</option>
+                            <option value="1080">Vector (Pro)</option>
+                        </select>
+                        <button id="downloadSvgBtn" class="dl-btn-modern">
+                            <i data-lucide="download"></i> Download
+                        </button>
+                    </div>
+
+                    <!-- JPG -->
+                    <div class="dl-card">
+                        <div class="dl-header">
+                            <span class="dl-format">JPG</span>
+                            <i data-lucide="file-image" class="dl-icon"></i>
+                        </div>
+                        <select id="jpgQuality" class="dl-quality-select">
+                            <option value="480">480 px (Free)</option>
+                            <option value="720">720 px (Pro)</option>
+                            <option value="1080">1080 px (Pro)</option>
+                        </select>
+                        <button id="downloadJpgBtn" class="dl-btn-modern">
+                            <i data-lucide="download"></i> Download
+                        </button>
+                    </div>
+
+                    <!-- PDF -->
+                    <div class="dl-card">
+                        <div class="dl-header">
+                            <span class="dl-format">PDF</span>
+                            <i data-lucide="file-type-2" class="dl-icon"></i>
+                        </div>
+                        <select id="pdfQuality" class="dl-quality-select">
+                            <option value="480">Standard (Free)</option>
+                            <option value="720">High Res (Pro)</option>
+                            <option value="1080">Print (Pro)</option>
+                        </select>
+                        <button id="downloadPdfBtn" class="dl-btn-modern">
+                            <i data-lucide="download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Generator Specific Logic
+    function collectCurrentData() {
+        // Minimal data collection for basic QR types
+        const urlInput = document.querySelector('input[name="url"]');
+        const textInput = document.querySelector('textarea[name="text"]');
+        let data = '';
+        if (urlInput && urlInput.value) data = urlInput.value.trim();
+        if (!data && textInput && textInput.value) data = textInput.value.trim();
+        if (!data) data = 'https://qrnation.com';
+        return data;
+    }
+</script>
+{% endblock %}

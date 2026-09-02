@@ -1,0 +1,20 @@
+services:
+  web:
+    build: .
+    ports:
+      - "${PORT:-8080}:8080"
+    volumes:
+      - ./backend/static/uploads:/app/backend/static/uploads
+      - db-data:/app/backend
+    env_file:
+      - backend/.env
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  db-data:

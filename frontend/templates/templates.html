@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Templates - QRNation{% endblock %}
+
+{% block content %}
+<section class="premium-section">
+    <div class="section-badge">Product</div>
+    <h1 class="hero-title">QR Code <span class="gradient-text">Templates</span></h1>
+    <p class="hero-subtitle">Start with a professional design. Our templates are optimized for readability and style.</p>
+
+    <div class="bento-grid" style="margin-top: 50px;">
+        <div class="bento-card" style="grid-column: span 1;">
+            <div class="card-icon"><i data-lucide="briefcase"></i></div>
+            <h3>Business Cards</h3>
+            <p>Sleek designs for professional networking.</p>
+        </div>
+        <div class="bento-card" style="grid-column: span 1;">
+            <div class="card-icon"><i data-lucide="utensils"></i></div>
+            <h3>Restaurant Menus</h3>
+            <p>Contactless dining with elegant QR menus.</p>
+        </div>
+        <div class="bento-card" style="grid-column: span 1;">
+            <div class="card-icon"><i data-lucide="ticket"></i></div>
+            <h3>Event Tickets</h3>
+            <p>Fast check-in with high-contrast codes.</p>
+        </div>
+        <div class="bento-card" style="grid-column: span 2;">
+            <div class="card-icon"><i data-lucide="sparkles"></i></div>
+            <h3>Custom Branding</h3>
+            <p>Incorporate your brand colors and logo into every scan.</p>
+        </div>
+        <div class="bento-card" style="grid-column: span 1;">
+            <div class="card-icon"><i data-lucide="share-2"></i></div>
+            <h3>Social Media</h3>
+            <p>Connect your audience across all platforms.</p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 60px;">
+        <a href="{{ url_for('main.generate_qr') }}" class="btn btn-lg btn-primary">Start Generating</a>
+    </div>
+</section>
+{% endblock %}

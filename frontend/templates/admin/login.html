@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - QRNation{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card admin-auth-card">
+        <div class="admin-badge">
+            <i data-lucide="shield-check"></i>
+            <span>Admin Portal</span>
+        </div>
+        <h2>Admin Sign In</h2>
+        <p>Restricted access — admin credentials required</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('admin.admin_login') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <label>Admin Email</label>
+                <input type="email" name="email" class="form-input" placeholder="admin@qrnation.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary admin-login-btn" style="width: 100%;">
+                <i data-lucide="lock" style="width:16px;height:16px;margin-right:6px;"></i>
+                Access Admin Panel
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p><a href="{{ url_for('auth.login') }}">← Back to user login</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    padding: 40px 20px;
+}
+.auth-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+.admin-auth-card {
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow: 0 10px 40px rgba(168, 85, 247, 0.1);
+}
+.admin-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+.admin-badge i {
+    width: 16px;
+    height: 16px;
+}
+.auth-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.auth-card p {
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 30px;
+}
+.alert {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.alert-success {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+.admin-login-btn {
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+}
+.admin-login-btn:hover {
+    background: linear-gradient(135deg, #9333ea 0%, #6d28d9 100%);
+}
+.auth-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+.auth-footer a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+</style>
+{% endblock %}

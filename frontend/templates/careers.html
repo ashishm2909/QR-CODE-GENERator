@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Careers - QRNation{% endblock %}
+
+{% block content %}
+<section class="premium-section">
+    <div class="section-badge">Company</div>
+    <h1 class="hero-title">Join the <span class="gradient-text">Nation</span></h1>
+    <p class="hero-subtitle">Help us build the future of QR technology. Explore open roles.</p>
+
+    <div class="careers-list" style="max-width: 800px; margin: 60px auto;">
+        <div class="career-item" style="background: var(--bg-secondary); padding: 30px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border: 1px solid var(--bg-tertiary); transition: var(--transition-fast);">
+            <div>
+                <h3 style="margin: 0;">Senior Full-Stack Developer</h3>
+                <p style="color: var(--text-muted); margin-top: 5px;">REMOTE • PRODUCT TEAM</p>
+            </div>
+            <a href="#" class="btn btn-outline" style="min-width: 120px;">View Role</a>
+        </div>
+        
+        <div class="career-item" style="background: var(--bg-secondary); padding: 30px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border: 1px solid var(--bg-tertiary); transition: var(--transition-fast);">
+            <div>
+                <h3 style="margin: 0;">UI/UX Designer</h3>
+                <p style="color: var(--text-muted); margin-top: 5px;">HYBRID • DESIGN TEAM</p>
+            </div>
+            <a href="#" class="btn btn-outline" style="min-width: 120px;">View Role</a>
+        </div>
+
+        <div class="career-item" style="background: var(--bg-secondary); padding: 30px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border: 1px solid var(--bg-tertiary); transition: var(--transition-fast);">
+            <div>
+                <h3 style="margin: 0;">Growth Marketing Manager</h3>
+                <p style="color: var(--text-muted); margin-top: 5px;">NEW YORK • MARKETING TEAM</p>
+            </div>
+            <a href="#" class="btn btn-outline" style="min-width: 120px;">View Role</a>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: var(--text-muted);">
+        Don't see a role that fits? <a href="mailto:careers@qrnation.com" style="color: var(--accent-primary);">Send us your CV anyway!</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Guides - QRNation{% endblock %}
+
+{% block content %}
+<section class="premium-section">
+    <div class="section-badge">Resources</div>
+    <h1 class="hero-title">Step-by-Step <span class="gradient-text">Guides</span></h1>
+    <p class="hero-subtitle">Learn how to make the most of our QR code tools with these comprehensive guides.</p>
+
+    <div class="bento-grid" style="margin-top: 50px;">
+        <div class="bento-card" style="grid-column: span 1.5;">
+            <h3>Creating Your First Artistic QR</h3>
+            <p>A complete walkthrough of the Artistic Studio features.</p>
+            <a href="#" style="color: var(--accent-primary); margin-top: 20px; display: inline-block;">Read Guide →</a>
+        </div>
+        <div class="bento-card" style="grid-column: span 1.5;">
+            <h3>Best Practices for QR Printing</h3>
+            <p>Ensure your codes scan every time on any material.</p>
+            <a href="#" style="color: var(--accent-primary); margin-top: 20px; display: inline-block;">Read Guide →</a>
+        </div>
+        <div class="bento-card" style="grid-column: span 3;">
+            <div class="card-icon"><i data-lucide="video"></i></div>
+            <h3>Video: Integrating dynamic QR codes</h3>
+            <p>Watch how to use our API to create codes that change their destination after printing.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
