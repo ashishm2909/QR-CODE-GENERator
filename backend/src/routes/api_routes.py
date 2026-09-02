@@ -278,3 +278,4 @@ def scan_qr():
     except Exception as e:
         logger.exception("Error scanning QR code")
         return jsonify({'success': False, 'error': 'Failed to process image'}), 500
+

@@ -3,6 +3,11 @@
 {% block title %}Pricing - QRNation{% endblock %}
 
 {% block content %}
+
+<div style="background-color: #fef3c7; color: #d97706; padding: 12px; text-align: center; border-bottom: 1px solid #fde68a; font-weight: bold; border-radius: 4px; margin: 20px auto; max-width: 1100px;">
+  Note: Currently the Payment integration is in TEST MODE.
+</div>
+
 <section class="hero" style="text-align:center; margin: 40px 0;">
   <h1>Simple, transparent pricing</h1>
   <p style="color: var(--text-secondary); max-width: 700px; margin: 12px auto 0;">
@@ -28,9 +33,9 @@
         <li>Download PNG & PDF</li>
       </ul>
       {% if current_user.is_authenticated and current_user.plan == 'free' %}
-        <button class="btn btn-outline pricing-btn" disabled>Current Plan</button>
+      <button class="btn btn-outline pricing-btn" disabled>Current Plan</button>
       {% else %}
-        <a href="{{ url_for('main.generate_qr') }}" class="btn btn-outline pricing-btn">Start for Free</a>
+      <a href="{{ url_for('main.generate_qr') }}" class="btn btn-outline pricing-btn">Start for Free</a>
       {% endif %}
     </div>
 
@@ -51,11 +56,13 @@
         <li>Higher resolution</li>
       </ul>
       {% if current_user.is_authenticated and current_user.plan == 'trial' %}
-        <button class="btn btn-outline pricing-btn" style="border-color:#3b82f6;color:#3b82f6;" disabled>Active Trial</button>
+      <button class="btn btn-outline pricing-btn" style="border-color:#3b82f6;color:#3b82f6;" disabled>Active
+        Trial</button>
       {% elif current_user.is_authenticated and current_user.plan in ('monthly', 'pro', 'business') %}
-        <button class="btn btn-outline pricing-btn" disabled>Included in your plan</button>
+      <button class="btn btn-outline pricing-btn" disabled>Included in your plan</button>
       {% else %}
-        <button class="btn btn-primary pricing-btn" style="background:#3b82f6;border:none;" onclick="initiatePayment('trial')">Start 7-Day Trial</button>
+      <button class="btn btn-primary pricing-btn" style="background:#3b82f6;border:none;"
+        onclick="initiatePayment('trial')">Start 7-Day Trial</button>
       {% endif %}
     </div>
 
@@ -75,11 +82,11 @@
         <li>Higher resolution</li>
       </ul>
       {% if current_user.is_authenticated and current_user.plan == 'monthly' %}
-        <button class="btn btn-outline pricing-btn" disabled>Current Plan</button>
+      <button class="btn btn-outline pricing-btn" disabled>Current Plan</button>
       {% elif current_user.is_authenticated and current_user.plan in ('pro', 'business') %}
-        <button class="btn btn-outline pricing-btn" disabled>Included in your plan</button>
+      <button class="btn btn-outline pricing-btn" disabled>Included in your plan</button>
       {% else %}
-        <button class="btn btn-outline pricing-btn" onclick="initiatePayment('monthly')">Get 1 Month Pro</button>
+      <button class="btn btn-outline pricing-btn" onclick="initiatePayment('monthly')">Get 1 Month Pro</button>
       {% endif %}
     </div>
 
@@ -94,7 +101,8 @@
       <h3>3 Months Pro</h3>
       <p class="pricing-subtitle">Best value for creators</p>
       <div class="pricing-amount">&#8377;1,299</div>
-      <p class="pricing-duration">one-time / 3 months &nbsp;<span style="color:#22c55e;font-weight:700;font-size:0.75rem;">SAVE 13%</span></p>
+      <p class="pricing-duration">one-time / 3 months &nbsp;<span
+          style="color:#22c55e;font-weight:700;font-size:0.75rem;">SAVE 13%</span></p>
       <ul class="pricing-features">
         <li>Everything in Free</li>
         <li>Full-color artistic rendering</li>
@@ -106,11 +114,13 @@
         <li>Priority support</li>
       </ul>
       {% if current_user.is_authenticated and current_user.plan == 'pro' %}
-        <button class="btn btn-primary pricing-btn" disabled>Current Plan</button>
+      <button class="btn btn-primary pricing-btn" disabled>Current Plan</button>
       {% elif current_user.is_authenticated and current_user.plan == 'business' %}
-        <button class="btn btn-outline pricing-btn" disabled>Included in Business</button>
+      <button class="btn btn-outline pricing-btn" disabled>Included in Business</button>
       {% else %}
-        <button class="btn btn-primary pricing-btn" style="background:linear-gradient(135deg,#a855f7,#7c3aed);border:none;" onclick="initiatePayment('pro')">Get 3 Months Pro</button>
+      <button class="btn btn-primary pricing-btn"
+        style="background:linear-gradient(135deg,#a855f7,#7c3aed);border:none;" onclick="initiatePayment('pro')">Get 3
+        Months Pro</button>
       {% endif %}
     </div>
 
@@ -130,9 +140,9 @@
         <li>Multi-user team access</li>
       </ul>
       {% if current_user.is_authenticated and current_user.plan == 'business' %}
-        <button class="btn btn-primary pricing-btn" disabled>Current Plan</button>
+      <button class="btn btn-primary pricing-btn" disabled>Current Plan</button>
       {% else %}
-        <button class="btn btn-outline pricing-btn" onclick="initiatePayment('business')">Get Business</button>
+      <button class="btn btn-outline pricing-btn" onclick="initiatePayment('business')">Get Business</button>
       {% endif %}
     </div>
 
@@ -140,15 +150,19 @@
 
   {% if not current_user.is_authenticated %}
   <p style="text-align:center; margin-top: 24px; color: var(--text-secondary);">
-    <a href="{{ url_for('auth.login') }}" style="color: var(--accent-primary); text-decoration: none; font-weight: 600;">Log in</a> or
-    <a href="{{ url_for('auth.signup') }}" style="color: var(--accent-primary); text-decoration: none; font-weight: 600;">Sign up</a> to upgrade.
+    <a href="{{ url_for('auth.login') }}"
+      style="color: var(--accent-primary); text-decoration: none; font-weight: 600;">Log in</a> or
+    <a href="{{ url_for('auth.signup') }}"
+      style="color: var(--accent-primary); text-decoration: none; font-weight: 600;">Sign up</a> to upgrade.
   </p>
   {% endif %}
 
   {% if razorpay_key_id and 'test' in razorpay_key_id %}
-  <div style="text-align:center; margin-top: 16px; padding: 12px 20px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">
+  <div
+    style="text-align:center; margin-top: 16px; padding: 12px 20px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">
     <small style="color: #f59e0b;">
-      <strong>Test Mode Active</strong> — Use card <code>4111 1111 1111 1111</code> with any future expiry/CVV. UPI is only available in live mode.
+      <strong>Test Mode Active</strong> — Use card <code>4111 1111 1111 1111</code> with any future expiry/CVV. UPI is
+      only available in live mode.
     </small>
   </div>
   {% endif %}
@@ -157,108 +171,111 @@
 <!-- Razorpay Checkout Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-function initiatePayment(plan) {
+  function initiatePayment(plan) {
     if (!{{ 'true' if current_user.is_authenticated else 'false' }}) {
-        window.location.href = '{{ url_for("auth.login") }}';
+    window.location.href = '{{ url_for("auth.login") }}';
+    return;
+  }
+
+  const btn = event.target;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = 'Creating order...';
+  btn.disabled = true;
+
+  fetch(`/payment/create-order/${plan}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        showToast(data.error, 'error');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
         return;
-    }
+      }
 
-    const btn = event.target;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = 'Creating order...';
-    btn.disabled = true;
-
-    fetch(`/payment/create-order/${plan}`)
-        .then(r => r.json())
-        .then(data => {
-            if (data.error) {
-                showToast(data.error, 'error');
+      const options = {
+        key: '{{ razorpay_key_id }}',
+        amount: data.amount,
+        currency: data.currency,
+        name: 'QRNation',
+        description: `${data.plan_label}`,
+        order_id: data.order_id,
+        retry: { enabled: true, max_count: 3 },
+        handler: function (response) {
+          fetch('/payment/verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            })
+          })
+            .then(r => r.json())
+            .then(result => {
+              if (result.success) {
+                showToast('Payment successful! Plan upgraded.', 'success');
+                setTimeout(() => { window.location.href = `/payment/success?plan=${result.plan}`; }, 1500);
+              } else {
+                showToast(result.error || 'Payment verification failed', 'error');
                 btn.innerHTML = originalText;
                 btn.disabled = false;
-                return;
-            }
-
-            const options = {
-                key: '{{ razorpay_key_id }}',
-                amount: data.amount,
-                currency: data.currency,
-                name: 'QRNation',
-                description: `${data.plan_label}`,
-                order_id: data.order_id,
-                retry: { enabled: true, max_count: 3 },
-                handler: function (response) {
-                    fetch('/payment/verify', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                        },
-                        body: JSON.stringify({
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                        })
-                    })
-                    .then(r => r.json())
-                    .then(result => {
-                        if (result.success) {
-                            showToast('Payment successful! Plan upgraded.', 'success');
-                            setTimeout(() => { window.location.href = `/payment/success?plan=${result.plan}`; }, 1500);
-                        } else {
-                            showToast(result.error || 'Payment verification failed', 'error');
-                            btn.innerHTML = originalText;
-                            btn.disabled = false;
-                        }
-                    })
-                    .catch(() => {
-                        showToast('Payment verification failed. Contact support.', 'error');
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    });
-                },
-                prefill: {
-                    email: '{{ current_user.email if current_user.is_authenticated else "" }}',
-                    contact: '{{ current_user.phone if current_user.is_authenticated and current_user.phone else "" }}',
-                },
-                theme: { color: '#a855f7' },
-                modal: {
-                    ondismiss: function () { btn.innerHTML = originalText; btn.disabled = false; }
-                }
-            };
-
-            const rzp = new Razorpay(options);
-            rzp.on('payment.failed', function (response) {
-                showToast('Payment failed: ' + (response.error.description || 'Unknown error'), 'error');
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+              }
+            })
+            .catch(() => {
+              showToast('Payment verification failed. Contact support.', 'error');
+              btn.innerHTML = originalText;
+              btn.disabled = false;
             });
-            rzp.open();
-        })
-        .catch(() => {
-            showToast('Failed to create order. Please try again.', 'error');
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        });
+        },
+        prefill: {
+          email: '{{ current_user.email if current_user.is_authenticated else "" }}',
+          contact: '{{ current_user.phone if current_user.is_authenticated and current_user.phone else "" }}',
+        },
+        theme: { color: '#a855f7' },
+        modal: {
+          ondismiss: function () { btn.innerHTML = originalText; btn.disabled = false; }
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        showToast('Payment failed: ' + (response.error.description || 'Unknown error'), 'error');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      });
+      rzp.open();
+    })
+    .catch(() => {
+      showToast('Failed to create order. Please try again.', 'error');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    });
 }
 </script>
 
 <style>
-.pricing-grid {
+  .pricing-grid {
     display: grid;
     gap: 20px;
     width: 100%;
-}
-.pricing-grid-top {
+  }
+
+  .pricing-grid-top {
     grid-template-columns: repeat(3, 1fr);
     max-width: 800px;
     margin: 0 auto 20px auto;
-}
-.pricing-grid-bottom {
+  }
+
+  .pricing-grid-bottom {
     grid-template-columns: repeat(2, 1fr);
     max-width: 540px;
     margin: 0 auto;
-}
-.pricing-card {
+  }
+
+  .pricing-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 16px;
@@ -267,59 +284,71 @@ function initiatePayment(plan) {
     flex-direction: column;
     position: relative;
     transition: all 0.3s ease;
-}
-.pricing-card:hover {
+  }
+
+  .pricing-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-}
-.pricing-card--popular {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .pricing-card--popular {
     border: 2px solid var(--accent-primary);
-}
-.pricing-card--trial {
-    border: 1px solid rgba(59,130,246,0.4);
-}
-.pricing-card h3 {
+  }
+
+  .pricing-card--trial {
+    border: 1px solid rgba(59, 130, 246, 0.4);
+  }
+
+  .pricing-card h3 {
     margin-bottom: 4px;
     font-size: 1.15rem;
-}
-.pricing-subtitle {
+  }
+
+  .pricing-subtitle {
     color: var(--text-secondary);
     margin-bottom: 16px;
     font-size: 0.85rem;
-}
-.pricing-amount {
+  }
+
+  .pricing-amount {
     font-size: 2.2rem;
     font-weight: 800;
     margin-bottom: 4px;
-}
-.pricing-duration {
+  }
+
+  .pricing-duration {
     color: var(--text-secondary);
     font-size: 0.78rem;
     margin-bottom: 16px;
-}
-.pricing-features {
+  }
+
+  .pricing-features {
     list-style: none;
     display: grid;
     gap: 6px;
     margin: 0 0 24px 0;
     flex: 1;
-}
-.pricing-features li {
+  }
+
+  .pricing-features li {
     font-size: 0.85rem;
     padding-left: 16px;
     position: relative;
-}
-.pricing-features li::before {
+  }
+
+  .pricing-features li::before {
     content: '\2713';
     position: absolute;
     left: 0;
     color: #22c55e;
     font-weight: 700;
-}
-.pricing-btn {
+  }
+
+  .pricing-btn {
     width: 100%;
-}
-.pricing-badge {
+  }
+
+  .pricing-badge {
     position: absolute;
     top: -12px;
     left: 50%;
@@ -329,18 +358,28 @@ function initiatePayment(plan) {
     padding: 4px 12px;
     border-radius: 20px;
     white-space: nowrap;
-}
-.badge-purple {
+  }
+
+  .badge-purple {
     background: var(--accent-primary);
     color: #000;
-}
-.badge-blue {
+  }
+
+  .badge-blue {
     background: #3b82f6;
     color: #fff;
-}
-@media (max-width: 768px) {
-    .pricing-grid-top { grid-template-columns: 1fr; max-width: 360px; }
-    .pricing-grid-bottom { grid-template-columns: 1fr; max-width: 360px; }
-}
+  }
+
+  @media (max-width: 768px) {
+    .pricing-grid-top {
+      grid-template-columns: 1fr;
+      max-width: 360px;
+    }
+
+    .pricing-grid-bottom {
+      grid-template-columns: 1fr;
+      max-width: 360px;
+    }
+  }
 </style>
 {% endblock %}

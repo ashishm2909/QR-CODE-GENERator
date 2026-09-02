@@ -1,230 +1,152 @@
-# QRNation – Production-Ready QR & Barcode Generator
+# QRNation — QR Code Generator
 
-QRNation is a Flask-based web app to generate standard and artistic QR codes. It supports multiple data types, inline logo overlays, and an SVG-based artistic renderer with dot/diamond modules and custom finder patterns. This README describes the production-ready structure, workflows, deployment guidance, and operations.
-
+QRNation is a Flask-based web application for generating standard and artistic QR codes. It supports multiple data types, inline logo overlays, an SVG-based artistic renderer with dot/diamond modules and custom finder patterns, QR scanning, and paid plans via Razorpay.
 
 ## Features
-- Generate QR codes for URL, Text, WiFi, vCard, Social profiles, Files (image, pdf, audio, video), and more
-- Artistic SVG renderer:
-  - Module shapes: square, circle, diamond, rounded
-  - Finder styles: classic, rounded, bullseye
-  - Image-based color sampling and optional halftone
+
+- Generate QR codes for URL, Text, WiFi, vCard, Social profiles, and more
+- Artistic SVG renderer with configurable module shapes (square, circle, diamond, rounded), finder styles (classic, rounded, bullseye), image-based color sampling, and optional halftone
 - Center logo overlay in standard PNG mode
-- Client-side downloads: PNG, PDF (using jsPDF)
-- Responsive UI and an enhanced global footer
+- Client-side downloads: PNG, PDF (via jsPDF)
+- QR code scanner (browser-based, using pyzbar)
+- User accounts with registration, login, and password reset
+- Paid plans via Razorpay payment gateway
+- Admin dashboard for user/plan management
+- Responsive UI with seasonal themes
 
-
-## Recommended Production Structure
-
-You can progressively migrate to this standardized structure while keeping your current static and template assets:
+## Project Structure
 
 ```
 qr-code-generator/
-├─ wsgi.py                         # WSGI entry (gunicorn)
-├─ requirements.txt                # Pinned dependencies
-├─ .env                            # Production environment (not committed)
-├─ instance/
-│  └─ config.py                    # Instance-specific secrets/overrides (optional)
-├─ qrnation/
-│  ├─ __init__.py                  # App factory create_app(config)
-│  ├─ config.py                    # Base/Dev/Prod config
-│  ├─ routes/
-│  │  ├─ __init__.py
-│  │  ├─ public.py                 # index, generator page
-│  │  ├─ generator.py              # /api/generate, /api/render_artistic_svg
-│  │  └─ uploads.py                # /uploads/<filename>
-│  ├─ services/
-│  │  ├─ __init__.py
-│  │  └─ qr_service.py             # matrix generation, artistic svg, logo overlay
-│  ├─ templates/                   # (option A) move templates here
-│  └─ static/                      # (option A) move static here
-├─ templates/                      # (option B) keep current templates
-├─ static/                         # (option B) keep current static
-│  ├─ css/
-│  ├─ js/
-│  ├─ images/
-│  └─ uploads/                     # writable at runtime
-├─ scripts/
-│  ├─ gunicorn_start.sh            # Launch gunicorn with config
-│  └─ collectstatic.sh             # Optional; for asset pipeline/CDN
-├─ docker/
-│  ├─ Dockerfile
-│  └─ gunicorn.conf.py
-├─ .gitignore
-├─ LICENSE (optional)
-└─ README.md
+├─ backend/
+│  ├─ app.py                    # Development entry point
+│  ├─ wsgi.py                   # WSGI entry (gunicorn)
+│  ├─ config.py                 # Flask config (Base/Dev/Prod)
+│  ├─ requirements.txt          # Python dependencies
+│  ├─ .env.example             # Environment variable template
+│  ├─ .env                     # Local environment (gitignored)
+│  ├─ entrypoint.sh            # Container startup (migrations + gunicorn)
+│  ├─ src/
+│  │  ├─ __init__.py           # App factory create_app()
+│  │  ├─ models.py            # SQLAlchemy models (User, Payment, QRCode)
+│  │  ├─ services/
+│  │  │  └─ qr_service.py     # QR generation, artistic SVG, scanning
+│  │  └─ routes/
+│  │     ├─ auth_routes.py    # Login, signup, logout
+│  │     ├─ admin_routes.py   # Admin dashboard
+│  │     ├─ main_routes.py    # Public pages
+│  │     ├─ api_routes.py     # API endpoints
+│  │     └─ payment_routes.py # Razorpay checkout
+│  └─ migrations/             # Alembic database migrations
+├─ frontend/
+│  ├─ templates/              # Jinja2 templates (18 pages)
+│  ├─ static/
+│  │  ├─ css/                # Stylesheets
+│  │  ├─ js/                 # Client-side JavaScript
+│  │  ├─ images/             # Static images
+│  │  └─ uploads/            # User-uploaded files (runtime)
+│  └─ static/style.css       # Main stylesheet
+├─ Dockerfile
+├─ docker-compose.yml
+├─ Makefile
+├─ requirements.txt           # Pinned dependencies (root)
+├─ README.md
+└─ .gitignore
 ```
 
-Notes:
-- Option A: co-locate templates/static under qrnation/ for a fully self-contained package.
-- Option B: keep using current templates/ and static/ at project root; configure Flask with template_folder and static_folder accordingly.
-- Ensure static/uploads is writable by the runtime user.
+## Requirements
 
+- Python 3.11+
+- pip
 
-## Configuration
+## Local Development
 
-Environment variables (set via .env in production):
-- SECRET_KEY: strong random string
-- FLASK_ENV=production
-- MAX_CONTENT_LENGTH=16777216  # 16MB default
-- UPLOAD_FOLDER=/app/static/uploads  # path must exist and be writable
-
-Flask Config classes:
-- BaseConfig: loads from environment
-- DevelopmentConfig: DEBUG=True
-- ProductionConfig: DEBUG=False
-
-
-## Dependencies (Pinned)
-
-```
-Flask==3.0.2
-qrcode[pil]==7.4.2
-Pillow==10.2.0
-gunicorn==21.2.0
-# Dev optional
-python-dotenv==1.0.1
-black==24.2.0
-isort==5.13.2
-flake8==7.0.0
+1. **Clone and setup:**
+```bash
+git clone <repo-url>
+cd qr-code-generator
+python3 -m venv venv
+source venv/bin/activate
+pip install -r backend/requirements.txt
 ```
 
-Update your requirements.txt accordingly.
-
-
-## Local Development Workflow
-
-1) Setup
-- python3 -m venv .venv
-- source .venv/bin/activate
-- pip install -r requirements.txt
-
-2) Run in dev
-- export FLASK_APP=wsgi.py
-- export FLASK_ENV=development
-- flask run --port 8080
-
-App available at http://localhost:8080
-
-
-## Production (Gunicorn + NGINX)
-
-1) Gunicorn configuration (docker/gunicorn.conf.py example):
-```
-bind = '0.0.0.0:8080'
-workers = 2
-threads = 2
-timeout = 60
-accesslog = '-'
-errorlog = '-'
-loglevel = 'info'
+2. **Configure environment:**
+```bash
+cp backend/.env.example backend/.env
+# Edit backend/.env — set SECRET_KEY, APP_URL, and Razorpay credentials
 ```
 
-2) Startup script (scripts/gunicorn_start.sh):
+3. **Run the development server:**
+```bash
+cd backend
+flask db upgrade
+flask run --port 8000
 ```
-#!/usr/bin/env bash
-set -e
-exec gunicorn -c docker/gunicorn.conf.py wsgi:app
+
+App available at http://localhost:8000
+
+## Production (Gunicorn)
+
+```bash
+cd backend
+flask db upgrade
+gunicorn --bind 0.0.0.0:8080 --workers 4 --threads 2 --timeout 60 wsgi:app
 ```
-Make executable: chmod +x scripts/gunicorn_start.sh
 
-3) Reverse proxy (NGINX):
-- Terminate TLS
-- Proxy / to http://127.0.0.1:8080
-- Long cache for /static/
-- Disable directory listing for /static/uploads/
-- Add security headers (HSTS, X-Content-Type-Options, etc.)
-
+For production, always set:
+- `FLASK_ENV=production`
+- `SECRET_KEY` to a strong random value
+- `APP_URL` to your domain
 
 ## Production (Docker)
 
-docker/Dockerfile example:
-```
-FROM python:3.11-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
-WORKDIR /app
-
-RUN adduser --disabled-password --gecos '' appuser \
-    && chown -R appuser:appuser /app
-USER appuser
-
-COPY --chown=appuser:appuser requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY --chown=appuser:appuser . .
-
-EXPOSE 8080
-CMD ["bash", "scripts/gunicorn_start.sh"]
+```bash
+docker build -t qrnation:latest .
+docker run --rm -p 8080:8080 --env-file backend/.env qrnation:latest
 ```
 
-Build and run:
-- docker build -t qrnation:latest .
-- docker run --rm -p 8080:8080 --env-file .env -v $(pwd)/static/uploads:/app/static/uploads qrnation:latest
-
-
-## WSGI Entry
-
-wsgi.py:
-```
-# Minimal WSGI entry using the current app (temporary) or the app factory once you migrate.
-try:
-    # Prefer app factory if present
-    from qrnation import create_app  # type: ignore
-    app = create_app('production')
-except Exception:
-    # Fallback to current monolithic app for compatibility
-    from app import app  # noqa: F401
-    # 'app' is the Flask instance defined in app.py
+Or with docker-compose:
+```bash
+docker-compose up -d --build
 ```
 
-This allows immediate deployment with gunicorn wsgi:app while you progressively adopt the app factory structure.
+The compose file maps a local volume for `static/uploads` and applies `backend/.env` as environment variables. A health check hits `/health`.
 
+## Configuration
 
-## Migration Plan (Incremental)
+Environment variables (`.env`):
 
-Phase 1 – Add WSGI and Docker/Gunicorn scaffolding
-- Add wsgi.py, docker/Dockerfile, docker/gunicorn.conf.py, scripts/gunicorn_start.sh
-- Keep existing app.py, templates/, and static/
+| Variable | Description | Default |
+|---|---|---|
+| `SECRET_KEY` | Flask secret key (required in production) | — |
+| `FLASK_ENV` | `development` or `production` | `development` |
+| `DATABASE_URL` | SQLAlchemy database URI | `sqlite:///app.db` |
+| `PORT` | Server port | `8080` |
+| `APP_URL` | Base URL for redirects | `http://localhost:8080` |
+| `RAZORPAY_KEY_ID` | Razorpay API key | — |
+| `RAZORPAY_KEY_SECRET` | Razorpay API secret | — |
 
-Phase 2 – App factory & blueprints
-- Create qrnation/__init__.py with create_app
-- Add qrnation/config.py
-- Split routes into qrnation/routes/{public,generator,uploads}.py
-- Move QR generation and SVG rendering logic to qrnation/services/qr_service.py
-- Point templates/static via app factory
+## API Endpoints
 
-Phase 3 – Hardening and optimization
-- Validate file uploads (content-type, extensions)
-- Unique filename generation and optional cleanup policy
-- Add error handlers (404/500) and logging formatters
-- Add caching headers for assets and fingerprinting (query-string or hashed names)
+| Method | Path | Description |
+|---|---|---|
+| POST | `/generate` | Generate standard QR code (PNG) |
+| POST | `/render_artistic_svg` | Generate artistic SVG QR code |
+| POST | `/api/scan-qr` | Scan/upload QR image and decode |
+| POST | `/api/plan` | Process plan purchase (Razorpay) |
+| DELETE | `/api/delete_qr/<id>` | Delete a saved QR code |
+| GET | `/api/qr-svg/<id>` | Retrieve a saved QR as SVG |
+| GET | `/health` | Health check |
 
+## Security
 
-## Security Checklist
-- Set SECRET_KEY via environment
-- Enforce HTTPS with HSTS (via NGINX)
-- Validate and limit uploads
-- Disable directory listing in uploads
-- Avoid leaking stack traces in production (DEBUG=False)
-
-
-## CI/CD (Optional)
-- Lint & format (black, isort, flake8)
-- Build Docker image on push
-- Healthcheck: curl / (200 OK)
-- Push to registry and deploy (e.g., to a VM or container platform)
-
+- CSRF protection via Flask-WTF on all forms
+- Content Security Policy and security headers via Flask-Talisman (production only)
+- Static file serving via WhiteNoise (production)
+- Session cookies secured in production (`Secure`, `HttpOnly`, `SameSite=Lax`)
+- Upload size limited to 16 MB
+- Never commit `.env` — it contains secrets
 
 ## License
-Choose a license (MIT/Apache-2.0/etc.) if the project is public.
 
-
-## Acknowledgements
-- Flask, Pillow, qrcode
-- jsPDF for client-side PDF download
-
----
-This README documents a production-ready layout and end-to-end workflow. In the repository, you can now add the files listed (wsgi.py, docker, scripts, qrnation package) and progressively refactor your current app.py into the app factory + blueprints structure without breaking existing functionality.
+Choose a license (MIT/Apache-2.0/etc.) for public distribution.
