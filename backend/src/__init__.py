@@ -93,7 +93,7 @@ def create_app(config_name='default'):
         Talisman(app,
             content_security_policy={
                 'default-src': "'self'",
-                'script-src': "'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://checkout.razorpay.com",
+                'script-src': "'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://checkout.razorpay.com",
                 'style-src': "'self' 'unsafe-inline' https://fonts.googleapis.com",
                 'font-src': "'self' https://fonts.gstatic.com",
                 'img-src': "'self' data: https:",
