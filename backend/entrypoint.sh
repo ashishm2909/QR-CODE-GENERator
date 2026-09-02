@@ -7,7 +7,7 @@ echo "Starting QRNation Entrypoint..."
 
 # Apply database migrations
 echo "Applying database migrations..."
-flask db upgrade
+python -m flask --app wsgi db upgrade
 
 # Start the application
 echo "Starting Gunicorn..."
