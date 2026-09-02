@@ -7,7 +7,7 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
     <title>{% block title %}QR Code Generator{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4">
-    <script src="{{ url_for('static', filename='js/lucide.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/lucide.min.js') }}?v=1"></script>
     <script>
         // Standardized on dark theme
         document.documentElement.setAttribute('data-theme', 'dark');
@@ -97,7 +97,7 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}?v=2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js" defer></script>
     <script>
 
