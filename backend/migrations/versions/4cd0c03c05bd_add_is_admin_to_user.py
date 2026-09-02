@@ -21,6 +21,49 @@ def upgrade():
     inspector = sa.inspect(bind)
 
     if not inspector.has_table('users'):
+        op.create_table(
+            'users',
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('email', sa.String(length=120), nullable=False),
+            sa.Column('password_hash', sa.String(length=256), nullable=False),
+            sa.Column('phone', sa.String(length=20), nullable=True),
+            sa.Column('plan', sa.String(length=20), nullable=True),
+            sa.Column('subscription_status', sa.String(length=50), nullable=True),
+            sa.Column('plan_expires_at', sa.DateTime(), nullable=True),
+            sa.Column('is_admin', sa.Boolean(), nullable=True),
+            sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
+            sa.PrimaryKeyConstraint('id'),
+            sa.UniqueConstraint('email'),
+        )
+        op.create_table(
+            'payments',
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('user_id', sa.Integer(), nullable=False),
+            sa.Column('razorpay_order_id', sa.String(length=255), nullable=True),
+            sa.Column('razorpay_payment_id', sa.String(length=255), nullable=True),
+            sa.Column('plan', sa.String(length=20), nullable=False),
+            sa.Column('amount', sa.Integer(), nullable=False),
+            sa.Column('currency', sa.String(length=10), nullable=True),
+            sa.Column('status', sa.String(length=50), nullable=True),
+            sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
+            sa.ForeignKeyConstraint(['user_id'], ['users.id']),
+            sa.PrimaryKeyConstraint('id'),
+        )
+        op.create_index('ix_payments_user_id', 'payments', ['user_id'], unique=False)
+        op.create_table(
+            'qr_codes',
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('user_id', sa.Integer(), nullable=False),
+            sa.Column('type', sa.String(length=50), nullable=False),
+            sa.Column('data', sa.Text(), nullable=False),
+            sa.Column('image_path', sa.String(length=255), nullable=True),
+            sa.Column('svg_content', sa.Text(), nullable=True),
+            sa.Column('is_artistic', sa.Boolean(), nullable=True),
+            sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
+            sa.ForeignKeyConstraint(['user_id'], ['users.id']),
+            sa.PrimaryKeyConstraint('id'),
+        )
+        op.create_index('ix_qr_codes_user_id', 'qr_codes', ['user_id'], unique=False)
         return
 
     columns = [col['name'] for col in inspector.get_columns('users')]

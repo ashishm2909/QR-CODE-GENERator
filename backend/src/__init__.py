@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 import os
 import logging
 import sqlite3
+from sqlalchemy import inspect
 from whitenoise import WhiteNoise
 
 from src.models import db, User
@@ -87,6 +88,12 @@ def create_app(config_name='default'):
     db.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
+
+    # Recover databases stamped by an earlier migration before their tables existed.
+    if config_name == 'production':
+        with app.app_context():
+            if not inspect(db.engine).has_table('users'):
+                db.create_all()
 
     # Apply Talisman security headers in production
     if config_name == 'production':
