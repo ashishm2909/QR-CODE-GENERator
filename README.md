@@ -123,6 +123,13 @@ docker-compose up -d --build
 
 The compose file maps a local volume for `static/uploads` and applies `backend/.env` as environment variables. A health check hits `/health`.
 
+## Deploy on Render
+
+1. Push this repository to GitHub and create a new **Blueprint** in Render for that repository. Render reads `render.yaml` and builds the included Dockerfile.
+2. Wait for the first deploy to finish, then open the generated `onrender.com` URL. The Blueprint creates a production `SECRET_KEY`; no Razorpay credentials are required, so payments remain unavailable until configured.
+
+The free web service uses an ephemeral filesystem. This app's default SQLite database and uploaded files are stored there and can be lost when the service restarts or redeploys. For persistent accounts and uploads, configure a persistent database and external file storage before relying on production data.
+
 ## Configuration
 
 Environment variables (`.env`):

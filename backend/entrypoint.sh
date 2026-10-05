@@ -11,4 +11,4 @@ python -m flask --app wsgi db upgrade
 
 # Start the application
 echo "Starting Gunicorn..."
-exec gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 4 --threads 2 --timeout 60 wsgi:app
+exec gunicorn --bind "0.0.0.0:${PORT:-8080}" --workers "${WEB_CONCURRENCY:-1}" --threads 2 --timeout 60 wsgi:app
