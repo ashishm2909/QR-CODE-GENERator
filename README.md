@@ -3,7 +3,7 @@
 QRNation is a Flask-based web application for generating standard and artistic QR codes. It supports multiple data types, inline logo overlays, an SVG-based artistic renderer with dot/diamond modules and custom finder patterns, QR scanning, and paid plans via Razorpay.
 
 
-
+LIVE Preview - https://qrnation.onrender.com/
 
 https://github.com/user-attachments/assets/c0d14f33-add4-441e-b4e1-53c5616d6d02
 
